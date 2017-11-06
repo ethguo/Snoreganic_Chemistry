@@ -1,4 +1,5 @@
-color defaultLineColor = color(0);
+color defaultLineColor = #000000;
+int textMargin = 15;
 
 Carbon[] baseChain;
 
@@ -7,6 +8,9 @@ int numCarbons = 10;
 void setup() {
   size(800, 600);
   strokeWeight(2);
+  textAlign(CENTER, CENTER);
+  PFont font = createFont("Arial", 20);
+  textFont(font);
 
   baseChain = new Carbon[numCarbons];
 
@@ -21,6 +25,8 @@ void setup() {
   baseChain[1].addChild(makeCarbonChain(1, #FF0000));
   baseChain[2].addChild(makeCarbonChain(2, #00FF00));
   baseChain[5].addChild(makeCarbonChain(4, #0000FF));
+  baseChain[6].addChild(new Halogen("Cl", #CCCC00));
+  baseChain[9].addChild(new Halogen("Br", #FF00FF));
 }
 
 void draw() {

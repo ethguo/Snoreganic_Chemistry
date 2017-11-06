@@ -1,30 +1,28 @@
-class Carbon {
-  Carbon[] children;
-  int numChildren;
-  color lineColor;
-  float bondLength = 50;
+class Halogen extends Carbon {
+  String symbol;
 
-  Carbon() {
-    this(defaultLineColor);
+  Halogen(String symbol) {
+    super();
+    this.symbol = symbol;
   }
 
-  Carbon(color lineColor) {
-    this.lineColor = lineColor;
-    this.children = new Carbon[3];
-  }
-
-  void addChild(Carbon child) {
-    children[numChildren] = child;
-    numChildren++;
+  Halogen(String symbol, color lineColor) {
+    super(lineColor);
+    this.symbol = symbol;
   }
 
   void draw(PVector fromCoords, float angle) {
     PVector newCoords = PVector.fromAngle(angle);
+    PVector lineEnd = newCoords.copy();
     newCoords.setMag(this.bondLength);
+    lineEnd.setMag(this.bondLength - textMargin);
     newCoords.add(fromCoords);
+    lineEnd.add(fromCoords);
 
     stroke(lineColor);
-    line(fromCoords.x, fromCoords.y, newCoords.x, newCoords.y);
+    fill(lineColor);
+    line(fromCoords.x, fromCoords.y, lineEnd.x, lineEnd.y);
+    text(this.symbol, newCoords.x, newCoords.y);
 
     drawChildren(newCoords, angle);
   }
