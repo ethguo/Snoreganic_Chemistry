@@ -26,17 +26,4 @@ class Halogen extends Carbon {
 
     drawChildren(newCoords, angle);
   }
-
-  void drawChildren(PVector fromCoords, float angle) {
-    float newAngle = angle;
-
-    for (int i = 0; i < numChildren; i++) {
-      if (angle > 0)
-        newAngle = (angle - PI/3) + i * 2*PI/3;
-      else
-        newAngle = (angle + PI/3) - i * 2*PI/3;
-
-      this.children[i].draw(fromCoords, newAngle);
-    }
-  }
 }

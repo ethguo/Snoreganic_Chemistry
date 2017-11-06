@@ -1,5 +1,6 @@
 color defaultLineColor = #000000;
 int textMargin = 15;
+float bondOffset = 8;
 
 Carbon[] baseChain;
 
@@ -25,6 +26,9 @@ void setup() {
   baseChain[1].addChild(makeCarbonChain(1, #FF0000));
   baseChain[2].addChild(makeCarbonChain(2, #00FF00));
   baseChain[5].addChild(makeCarbonChain(4, #0000FF));
+
+  baseChain[4].numBonds = 2;
+
   baseChain[6].addChild(new Halogen("Cl", #CCCC00));
   baseChain[9].addChild(new Halogen("Br", #FF00FF));
 }
