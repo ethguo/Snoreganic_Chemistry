@@ -1,17 +1,17 @@
 class Molecule {
   String name;
   int numCarbons;
-  Carbon[] baseChain;
+  Atom[] baseChain;
 
   Molecule(String name) {
     this.name = name;
     this.numCarbons = this.findNumMainChain();
-    this.baseChain = new Carbon[this.numCarbons];
+    this.baseChain = new Atom[this.numCarbons];
 
-    this.baseChain[this.numCarbons-1] = new Carbon();
+    this.baseChain[this.numCarbons-1] = new Atom();
 
     for (int i = this.numCarbons-2; i >= 0; i--) {
-      this.baseChain[i] = new Carbon();
+      this.baseChain[i] = new Atom();
       this.baseChain[i].addChild(this.baseChain[i+1]);
     }
   }
@@ -22,7 +22,7 @@ class Molecule {
   }
 
 
-  void addBranch(int index, Carbon branch) {
+  void addBranch(int index, Atom branch) {
     this.baseChain[index-1].addChild(branch);
   }
 
@@ -127,12 +127,12 @@ class Molecule {
 }
 
 
-Carbon makeCarbonChain(int n) {
+Atom makeCarbonChain(int n) {
   return makeCarbonChain(n, defaultLineColor);
 }
 
-Carbon makeCarbonChain(int n, color lineColor) {
-  Carbon chain = new Carbon(lineColor);
+Atom makeCarbonChain(int n, color lineColor) {
+  Atom chain = new Atom(lineColor);
   if (n > 1)
     chain.addChild(makeCarbonChain(n-1, lineColor));
   return chain;
