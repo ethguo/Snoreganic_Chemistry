@@ -1,3 +1,4 @@
+// configurations for drawing the molecule
 color defaultLineColor = #000000;
 int textMargin = 15;
 float bondOffset = 8;
@@ -18,32 +19,29 @@ void setup() {
   PFont font = createFont("Arial", 20);
   textFont(font);
 
-  grey = new Button(height / 40, height / 40, #999999);
+  grey = new Button(height / 40, height / 40, #999999); //provides list of molecules to choose from
+  green = new Button(width - height * 9 / 40, height / 40, #80ff80); //draws molecule, or press enter
+  yellow = new Button(width - height * 3 / 20, height / 40, #ffff80); //takes screenshot of molecule drawing
+  red = new Button(width - height * 3 / 40, height / 40, #ff8080); //clears screen
+  
   grey.display();
-
-  green = new Button(width - height * 9 / 40, height / 40, #80ff80);
   green.display();
-
-  yellow = new Button(width - height * 3 / 20, height / 40, #ffff80);
   yellow.display();
-
-  red = new Button(width - height * 3 / 40, height / 40, #ff8080);
   red.display();
 }
 
 void draw() {
   background(#ffffff);
 
+  // creating UI from scratch
   fill(#333333);
   noStroke();
-
   rect(0, 0, width, height * 2 / 20);
 
   grey.display();
 
   fill(#666666);
   stroke(#1a1a1a);
-
   rect(height / 10, height / 40, width - height * 7 / 20, height / 20, height / 40);
 
   green.display();
