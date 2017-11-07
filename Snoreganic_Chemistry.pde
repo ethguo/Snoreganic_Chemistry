@@ -67,17 +67,18 @@ void draw() {
 void createMolecule() {
   molecule = new Molecule(input);
 
-  // 2-methyl-3-ethyl-6-butyl
+  // 2-methyl-3-ethyl-4-butyl
   molecule.addBranch(2, makeCarbonChain(1, #FF0000));
   molecule.addBranch(3, makeCarbonChain(2, #00FF00));
-  molecule.addBranch(6, makeCarbonChain(4, #0000FF));
+  molecule.addBranch(4, makeCarbonChain(4, #0000FF));
 
-  // 4-ene
-  molecule.baseChain[4].numBonds = 2;
+  // 6-ene-9-yne
+  molecule.baseChain[6].numBonds = 2;
+  molecule.baseChain[9].numBonds = 3;
 
-  // 7-chloro-10-bromo
-  molecule.addBranch(7, new Halogen("Cl", #CCCC00));
-  molecule.addBranch(10, new Halogen("Br", #FF00FF));
+  // 4-chloro-12-bromo
+  molecule.addBranch(4, new Halogen("Cl", #CCCC00));
+  molecule.addBranch(12, new Halogen("Br", #FF00FF));
 }
 
 void keyPressed() {

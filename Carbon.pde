@@ -21,6 +21,12 @@ class Carbon {
   }
 
   void draw(PVector fromCoords, float angle) {
+    if (this.numBonds == 3) {
+      if (angle > 0)
+        angle -= PI/3;
+      else
+        angle += PI/3;
+    }
     PVector direction = PVector.fromAngle(angle);
 
     PVector bondLength = direction.copy();
@@ -41,21 +47,47 @@ class Carbon {
       bond2Start.add(fromCoords);
       bond2End.add(fromCoords);
       line(bond2Start.x, bond2Start.y, bond2End.x, bond2End.y);
+
+      if (this.numBonds > 2) {
+        PVector bond3Start = direction.copy();
+        bond3Start.rotate(-PI/2);
+        bond3Start.setMag(bondOffset);
+        PVector bond3End = bond3Start.copy();
+        bond3End.add(bondLength);
+        bond3Start.add(fromCoords);
+        bond3End.add(fromCoords);
+        line(bond3Start.x, bond3Start.y, bond3End.x, bond3End.y);
+      }
     }
 
     drawChildren(newCoords, angle);
   }
 
   void drawChildren(PVector fromCoords, float angle) {
-    float newAngle = angle;
-
-    for (int i = 0; i < numChildren; i++) {
+    if (numChildren == 3) {
+      // The first child should be the next carbon; should go straight out
+      this.children[0].draw(fromCoords, angle);
+      this.children[1].draw(fromCoords, angle + PI/2);
+      this.children[2].draw(fromCoords, angle - PI/2);
+    }
+     else {
+      float sign;
       if (angle > 0)
-        newAngle = (angle - PI/3) + i * 2*PI/3;
+        sign = 1;
       else
-        newAngle = (angle + PI/3) - i * 2*PI/3;
+        sign = -1;
 
-      this.children[i].draw(fromCoords, newAngle);
+      float baseAngle;
+      if (numBonds == 3)
+        baseAngle = angle;
+      else
+        baseAngle = angle - sign * PI/3;
+
+      for (int i = 0; i < numChildren; i++) {
+        float newAngle = baseAngle + sign * i * 2*PI/3;
+
+        this.children[i].draw(fromCoords, newAngle);
+      }
     }
   }
 }
