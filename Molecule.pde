@@ -1,11 +1,13 @@
 class Molecule {
   String name;
   int numCarbons;
+  String mainFunc;
   Carbon[] baseChain;
 
   Molecule(String name) {
     this.name = name;
     this.numCarbons = this.findNumMainChain();
+    this.mainFunc = this.findFunctionalGroup();
     this.baseChain = new Carbon[this.numCarbons];
 
     this.baseChain[this.numCarbons-1] = new Carbon();

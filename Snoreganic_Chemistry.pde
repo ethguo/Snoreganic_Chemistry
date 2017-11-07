@@ -73,8 +73,11 @@ void createMolecule() {
   molecule.addBranch(4, makeCarbonChain(4, #0000FF));
 
   // 6-ene-9-yne
-  molecule.baseChain[6].numBonds = 2;
-  molecule.baseChain[9].numBonds = 3;
+  if (molecule.mainFunc == "alkene")
+    molecule.baseChain[6].numBonds = 2;
+  else if (molecule.mainFunc == "alkyne")
+    molecule.baseChain[6].numBonds = 3;
+  //molecule.baseChain[9].numBonds = 3;
 
   // 4-chloro-12-bromo
   molecule.addBranch(4, new Halogen("Cl", #CCCC00));
