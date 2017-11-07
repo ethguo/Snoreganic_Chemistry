@@ -11,10 +11,11 @@ boolean drawUpdate = false;
 void setup() {
   size(960, 540);
   noLoop();
+  strokeWeight(2);
 
   textAlign(CENTER, CENTER);
-  // PFont font = createFont("Arial", 20);
-  // textFont(font);
+  PFont font = createFont("Arial", 20);
+  textFont(font);
 
   grey = new Button(height / 40, height / 40, #999999);
   grey.display();
@@ -49,10 +50,7 @@ void draw() {
   red.display();
 
   fill(#ffffff);
-
-  textAlign(CENTER, CENTER);
-  textSize(14);
-
+  textSize(15);
   text(input + "_", height / 10 + (width - height * 7 / 20) / 2, height / 20);
 
   if (molecule != null) {

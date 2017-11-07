@@ -21,6 +21,7 @@ class Halogen extends Carbon {
 
     stroke(lineColor);
     fill(lineColor);
+    textSize(20);
     line(fromCoords.x, fromCoords.y, lineEnd.x, lineEnd.y);
     text(this.symbol, newCoords.x, newCoords.y);
 
