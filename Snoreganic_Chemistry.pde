@@ -6,6 +6,7 @@ Molecule molecule;
 
 Button grey, green, yellow, red;
 String input = "";
+int cursor = 0;
 boolean drawUpdate = false;
 
 void setup() {
@@ -51,7 +52,12 @@ void draw() {
 
   fill(#ffffff);
   textSize(15);
-  text(input + "_", height / 10 + (width - height * 7 / 20) / 2, height / 20);
+  String textWithCursor;
+  if (cursor == input.length())
+    textWithCursor = input + " \u0332";
+  else
+    textWithCursor = insertChar(input, '\u0332', cursor+1);  
+  text(textWithCursor, height / 10 + (width - height * 7 / 20) / 2, height / 20);
 
   if (molecule != null) {
     molecule.draw();
@@ -76,18 +82,45 @@ void createMolecule() {
 
 void keyPressed() {
   if (key == CODED) {
-    //
-  } else {
-    if (key == BACKSPACE) {
-      if (input.length() > 0) {
-        input = input.substring(0, input.length() - 1);
-      }
-    } else if (key == ENTER) {
+    if (keyCode == LEFT && cursor > 0)
+      cursor--;
+    else if (keyCode == RIGHT && cursor < input.length())
+      cursor++;
+    else if (keyCode == UP)
+      cursor = 0;
+    else if (keyCode == DOWN)
+      cursor = input.length();
+  }
+  else {
+    if (key == ENTER) {
       createMolecule();
-    } else {
-      input += key;
+    }
+    else if (key == BACKSPACE && cursor > 0) {
+      cursor--;
+      input = popChar(input, cursor);
+    }
+    else if (key == DELETE && cursor < input.length()) {
+      input = popChar(input, cursor);
+    }
+    else if (key > 31 && key < 127) {
+      input = insertChar(input, key, cursor);
+      cursor++;
     }
   }
 
   redraw();
+}
+
+String insertChar(String string, char character, int index) {
+  String start = string.substring(0, index);
+  String end = string.substring(index);
+
+  return start + character + end;
+}
+
+String popChar(String string, int index) {
+  String start = string.substring(0, index);
+  String end = string.substring(index+1);
+
+  return start + end;
 }
