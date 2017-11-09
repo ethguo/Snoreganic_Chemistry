@@ -62,8 +62,8 @@ class UI {
       if (key == ENTER) {
         createMolecule();
       } else if (key == BACKSPACE && this.cursor > 0) {
-        this.input = this.popChar(this.cursor);
         this.cursor--;
+        this.input = this.popChar(this.cursor);
       } else if (key == DELETE && this.cursor < this.input.length()) {
         this.input = this.popChar(this.cursor);
       } else if (key > 31 && key < 127 && this.input.length() < 90) {
