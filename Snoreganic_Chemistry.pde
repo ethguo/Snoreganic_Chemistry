@@ -72,14 +72,22 @@ void createMolecule() {
 
   // 6-ene-9-yne
   if (molecule.mainFunc == "alkene")
-    molecule.baseChain[6].numBonds = 2;
+    molecule.baseChain[6].setNumBonds(2);
   else if (molecule.mainFunc == "alkyne")
-    molecule.baseChain[6].numBonds = 3;
+    molecule.baseChain[6].setNumBonds(3);
   //molecule.baseChain[9].numBonds = 3;
 
-  // 4-chloro-12-bromo
-  molecule.addBranch(4, new Halogen("Cl", #CCCC00));
-  molecule.addBranch(12, new Halogen("Br", #FF00FF));
+  // 4-bromo-5-chloro
+  molecule.addBranch(4, new Atom("Br", 1, #FF00FF));
+  molecule.addBranch(5, new Atom("Cl", 1, #CCCC00));
+
+  // 12-hydroxy
+  molecule.addBranch(12, new Atom("O", 2, #FF9900));
+
+  // 12-oxo
+  Atom oxoBranch = new Atom("O", 2, #00FFFF);
+  oxoBranch.setNumBonds(2);
+  molecule.addBranch(12, oxoBranch);
 }
 
 void keyPressed() {
