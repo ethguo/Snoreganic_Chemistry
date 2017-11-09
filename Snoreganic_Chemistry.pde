@@ -8,7 +8,6 @@ Molecule molecule;
 Button grey, green, yellow, red;
 String input = "";
 int cursor = 0;
-boolean drawUpdate = false;
 
 void setup() {
   size(960, 540);
@@ -16,7 +15,7 @@ void setup() {
   strokeWeight(2);
 
   textAlign(CENTER, CENTER);
-  PFont font = createFont("Arial", 20);
+  PFont font = createFont("Arial Unicode", 20);
   textFont(font);
 
   grey = new Button(height / 40, height / 40, #999999); //provides list of molecules to choose from
@@ -81,7 +80,8 @@ void createMolecule() {
   molecule.addBranch(4, new Atom("Br", 1, #FF00FF));
   molecule.addBranch(5, new Atom("Cl", 1, #CCCC00));
 
-  // 12-hydroxy
+  // 11-amino-12-hydroxy
+  molecule.addBranch(11, new Atom("N", 3, #00FF99));
   molecule.addBranch(12, new Atom("O", 2, #FF9900));
 
   // 12-oxo

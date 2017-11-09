@@ -91,14 +91,12 @@ class Atom {
     if (!this.element.equals("C")) {
       String symbol = this.element;
       int numHydrogens = this.bondingNumber - this.numChildren - this.numBonds;
-      print(this.element);
-      println(numHydrogens);
       if (numHydrogens >= 1) {
         symbol += "H";
         if (numHydrogens == 2) 
           symbol += "\u2082";
         if (numHydrogens == 3) 
-          symbol += "\u2088";
+          symbol += "\u2083";
       }
       text(symbol, newCoords.x, newCoords.y);
     }
