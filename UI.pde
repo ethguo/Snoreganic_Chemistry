@@ -18,6 +18,8 @@ class UI {
       background(#ffffff);
     }
 
+    strokeWeight(1);
+
     fill(#333333);
     noStroke();
 
