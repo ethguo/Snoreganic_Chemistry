@@ -2,70 +2,32 @@ color defaultLineColor = #000000;
 int textMargin = 15;
 float bondOffset = 8;
 
-Molecule molecule;
+UI ui;
 
-Button grey, green, yellow, red;
-String input = "";
-int cursor = 0;
-boolean drawUpdate = false;
+Molecule molecule;
 
 void setup() {
   size(960, 540);
+  background(#ffffff);
   noLoop();
-  strokeWeight(2);
 
   textAlign(CENTER, CENTER);
   PFont font = createFont("Arial", 20);
   textFont(font);
-
-  grey = new Button(height / 40, height / 40, #999999);
-  grey.display();
-
-  green = new Button(width - height * 9 / 40, height / 40, #80ff80);
-  green.display();
-
-  yellow = new Button(width - height * 3 / 20, height / 40, #ffff80);
-  yellow.display();
-
-  red = new Button(width - height * 3 / 40, height / 40, #ff8080);
-  red.display();
+  
+  ui = new UI();
 }
 
 void draw() {
-  background(#ffffff);
-
-  fill(#333333);
-  noStroke();
-
-  rect(0, 0, width, height * 2 / 20);
-
-  grey.display();
-
-  fill(#666666);
-  stroke(#1a1a1a);
-
-  rect(height / 10, height / 40, width - height * 7 / 20, height / 20, height / 40);
-
-  green.display();
-  yellow.display();
-  red.display();
-
-  fill(#ffffff);
-  textSize(15);
-  String textWithCursor;
-  if (cursor == input.length())
-    textWithCursor = input + " \u0332";
-  else
-    textWithCursor = insertChar(input, '\u0332', cursor+1);  
-  text(textWithCursor, height / 10 + (width - height * 7 / 20) / 2, height / 20);
-
+  ui.draw();
+  
   if (molecule != null) {
     molecule.draw();
   }
 }
 
 void createMolecule() {
-  molecule = new Molecule(input);
+  molecule = new Molecule(ui.input);
 
   // 2-methyl-3-ethyl-4-butyl
   molecule.addBranch(2, makeCarbonChain(1, #FF0000));
@@ -82,46 +44,13 @@ void createMolecule() {
 }
 
 void keyPressed() {
-  if (key == CODED) {
-    if (keyCode == LEFT && cursor > 0)
-      cursor--;
-    else if (keyCode == RIGHT && cursor < input.length())
-      cursor++;
-    else if (keyCode == UP)
-      cursor = 0;
-    else if (keyCode == DOWN)
-      cursor = input.length();
-  }
-  else {
-    if (key == ENTER) {
-      createMolecule();
-    }
-    else if (key == BACKSPACE && cursor > 0) {
-      cursor--;
-      input = popChar(input, cursor);
-    }
-    else if (key == DELETE && cursor < input.length()) {
-      input = popChar(input, cursor);
-    }
-    else if (key > 31 && key < 127) {
-      input = insertChar(input, key, cursor);
-      cursor++;
-    }
-  }
-
-  redraw();
+  ui.keyPressed();
 }
 
-String insertChar(String string, char character, int index) {
-  String start = string.substring(0, index);
-  String end = string.substring(index);
-
-  return start + character + end;
+void mousePressed() {
+  ui.mousePressed();
 }
 
-String popChar(String string, int index) {
-  String start = string.substring(0, index);
-  String end = string.substring(index+1);
-
-  return start + end;
+void mouseReleased() {
+  ui.mouseReleased();
 }
