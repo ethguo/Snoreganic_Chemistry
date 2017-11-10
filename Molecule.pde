@@ -38,7 +38,7 @@ class Molecule {
 
   void activateFunctionalGroup() {
     //2,2-dichloro-4-iodohept-2-yne-3,5-diol
-    String[] m1 ={"-3,5-diol", "3,5", "diol"};
+    String[] m1 ={"-1,8-dioic acid", "1,8", "dioic acid"};
     String[] locants = m1[1].split(",");
 
     if (m1[2].contains("ane"))
@@ -77,6 +77,20 @@ class Molecule {
         carbonyl.setNumBonds(2);
         this.addBranch(parseInt(locants[i]), carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
       }    
+    }
+    
+    else if (m1[2].contains("oic acid")){
+      Atom carbonyl = new Atom("O", 2, #00FFFF);
+      carbonyl.setNumBonds(2);
+      this.addBranch(1, carbonyl);
+      this.addBranch(1, new Atom("O", 2, #00FFFF));
+      
+      if(m1[2].contains("dioic acid")){
+        Atom carbonyl2 = new Atom("O", 2, #00FFFF);
+        carbonyl2.setNumBonds(2);
+        this.addBranch(this.numCarbons, carbonyl2);
+        this.addBranch(this.numCarbons, new Atom("O", 2, #00FFFF));
+      }  
     }
             
     else {}
