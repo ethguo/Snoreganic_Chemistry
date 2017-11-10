@@ -13,15 +13,12 @@ class Molecule {
       this.baseChain[i] = new Atom();
       this.baseChain[i].addChild(this.baseChain[i+1]);
     }
-    activateFunctionalGroup();
-    
+    activateFunctionalGroup();   
   }
-
 
   void draw() {
     this.baseChain[0].drawChildren(new PVector(100, height/2), PI/6);
   }
-
 
   void addBranch(int index, Atom branch) {
     this.baseChain[index-1].addChild(branch);
@@ -54,11 +51,16 @@ class Molecule {
           this.baseChain[parseInt(locants[i])].setNumBonds(3);        
       }
           
+      else if (m1[2].contains("amine")){
+        for(int i=0; i<locants.length; i++)
+          this.addBranch(parseInt(locants[i]), new Atom("N", 3, #035606));
+      }
+          
       else if (m1[2].contains("ol")){
         for (int i=0; i<locants.length;i++)
           this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));       
       }
-        
+      
       else if (m1[2].contains("al")){
         Atom carbonyl = new Atom("O", 2, #00FFFF);
         carbonyl.setNumBonds(2);
@@ -92,7 +94,7 @@ class Molecule {
           this.addBranch(this.numCarbons, new Atom("O", 2, #00FFFF));
         }  
       }
-              
+        
       else {}
 
       this.name = this.name.substring(0, this.name.length() - m1[0].length());
@@ -120,10 +122,7 @@ class Molecule {
       return "ester";
     else
       return "unknown";
-  }
-
-    
-  
+  } 
 
   int findNumCarbons(int i1, int i2, String func) {
     int n;
@@ -192,8 +191,6 @@ class Molecule {
 
     return n;
   }
-
-
 
 Atom makeCarbonChain(int n) {
   return makeCarbonChain(n, defaultLineColor);
