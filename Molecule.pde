@@ -37,7 +37,8 @@ class Molecule {
   }
 
   void activateFunctionalGroup() {
-    String[] m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
+    String funcGroupRegex = "-?(?:(\d+(?:,\d+)*)-)?(\w+(?: acid)?)$";
+    String[] m1 = match(this.name, funcGroupRegex);
     while (m1 != null) {
       String[] locants = m1[1].split(",");
 
@@ -96,7 +97,7 @@ class Molecule {
       else {}
 
       this.name = this.name.substring(0, this.name.length() - m1[0].length());
-      m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
+      m1 = match(this.name, funcGroupRegex);
     }
   }
   
