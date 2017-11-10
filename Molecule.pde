@@ -1,11 +1,13 @@
 class Molecule {
   String name;
   int numCarbons;
+  String mainFunc;
   Atom[] baseChain;
 
   Molecule(String name) {
     this.name = name;
     this.numCarbons = this.findNumMainChain();
+    this.mainFunc = this.findFunctionalGroup();
     this.baseChain = new Atom[this.numCarbons];
     this.baseChain[this.numCarbons-1] = new Atom();
 
@@ -13,8 +15,6 @@ class Molecule {
       this.baseChain[i] = new Atom();
       this.baseChain[i].addChild(this.baseChain[i+1]);
     }
-    activateFunctionalGroup();
-    
   }
 
 
@@ -36,52 +36,6 @@ class Molecule {
     return n;
   }
 
-  void activateFunctionalGroup() {
-    //2,2-dichloro-4-iodohept-2-yne-3,5-diol
-    String[] m1 ={"-3,5-diol", "3,5", "diol"};
-    String[] locants = m1[1].split(",");
-
-    if (m1[2].contains("ane"))
-      {}  
-      
-    else if (m1[2].contains("ene")){
-      for (int i=0; i<locants.length;i++)
-        this.baseChain[parseInt(locants[i])].setNumBonds(2);        
-    }
-    
-    else if (m1[2].contains("yne")){
-      for (int i=0; i<locants.length;i++)
-        this.baseChain[parseInt(locants[i])].setNumBonds(3);        
-    }
-        
-    else if (m1[2].contains("ol")){
-      for (int i=0; i<locants.length;i++)
-        this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));       
-    }
-      
-    else if (m1[2].contains("al")){
-      Atom carbonyl = new Atom("O", 2, #00FFFF);
-      carbonyl.setNumBonds(2);
-      this.addBranch(1, carbonyl);
-      
-      if(m1[2].contains("dial")){
-        Atom carbonyl2 = new Atom("O", 2, #00FFFF);
-        carbonyl2.setNumBonds(2);
-        this.addBranch(this.numCarbons, carbonyl2);
-      }      
-    }
-      
-    else if (m1[2].contains("one")){
-      for (int i=0; i<locants.length;i++){
-        Atom carbonyl = new Atom("O", 2, #00FFFF);
-        carbonyl.setNumBonds(2);
-        this.addBranch(parseInt(locants[i]), carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
-      }    
-    }
-            
-    else {}
-  }
-  
   String findFunctionalGroup() {
     int len = this.name.length();
     String last4 = this.name.substring(len-4);
@@ -103,9 +57,6 @@ class Molecule {
     else
       return "unknown";
   }
-
-    
-  
 
   int findNumCarbons(int i1, int i2, String func) {
     int n;
@@ -129,52 +80,52 @@ class Molecule {
     else
       end = "";
 
-    if (funcChunk.contains("eicos"))
+    if (funcChunk.contains("eicos"+end))
       n = 20;
-    else if (funcChunk.contains("nonadec"))
+    else if (funcChunk.contains("nonadec"+end))
       n = 19;
-    else if (funcChunk.contains("octadec"))
+    else if (funcChunk.contains("octadec"+end))
       n = 18;
-    else if (funcChunk.contains("heptadec"))
+    else if (funcChunk.contains("heptadec"+end))
       n = 17;
-    else if (funcChunk.contains("hexadec"))
+    else if (funcChunk.contains("hexadec"+end))
       n = 16;
-    else if (funcChunk.contains("pentadec"))
+    else if (funcChunk.contains("pentadec"+end))
       n = 15;
-    else if (funcChunk.contains("tetradec"))
+    else if (funcChunk.contains("tetradec"+end))
       n = 14;
-    else if (funcChunk.contains("tridec"))
+    else if (funcChunk.contains("tridec"+end))
       n = 13;
-    else if (funcChunk.contains("dodec"))
+    else if (funcChunk.contains("dodec"+end))
       n = 12;
-    else if (funcChunk.contains("undec"))
+    else if (funcChunk.contains("undec"+end))
       n = 11;
-    else if (funcChunk.contains("dec"))
+    else if (funcChunk.contains("dec"+end))
       n = 10;
-    else if (funcChunk.contains("non"))
+    else if (funcChunk.contains("non"+end))
       n = 9;
-    else if (funcChunk.contains("oct"))
+    else if (funcChunk.contains("oct"+end))
       n = 8;
-    else if (funcChunk.contains("hept"))
+    else if (funcChunk.contains("hept"+end))
       n = 7;
-    else if (funcChunk.contains("hex"))
+    else if (funcChunk.contains("hex"+end))
       n = 6;
-    else if (funcChunk.contains("pent"))
+    else if (funcChunk.contains("pent"+end))
       n = 5;
-    else if (funcChunk.contains("but"))
+    else if (funcChunk.contains("but"+end))
       n = 4;
-    else if (funcChunk.contains("prop"))
+    else if (funcChunk.contains("prop"+end))
       n = 3;
-    else if (funcChunk.contains("eth"))
+    else if (funcChunk.contains("eth"+end))
       n = 2;
-    else if (funcChunk.contains("meth"))
+    else if (funcChunk.contains("meth"+end))
       n = 1;
     else
       n = 0;
 
     return n;
   }
-
+}
 
 
 Atom makeCarbonChain(int n) {
@@ -186,5 +137,4 @@ Atom makeCarbonChain(int n, color lineColor) {
   if (n > 1)
     chain.addChild(makeCarbonChain(n-1, lineColor));
   return chain;
-}
 }

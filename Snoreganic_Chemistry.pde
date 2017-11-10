@@ -15,38 +15,47 @@ void setup() {
   textAlign(CENTER, CENTER);
   PFont font = createFont("Arial Unicode", 20);
   textFont(font);
-  
+
   ui = new UI();
 }
 
 void draw() {
   ui.draw();
-  
+
   if (molecule != null) {
+    ui.ddm.state = false;
+
     molecule.draw();
   }
 }
 
 void createMolecule() {
-  molecule = new Molecule(ui.input); 
+  molecule = new Molecule(ui.input);
 
-  //// 2-methyl-3-ethyl-4-butyl
-  //molecule.addBranch(2, makeCarbonChain(1, #FF0000));
-  //molecule.addBranch(3, makeCarbonChain(2, #00FF00));
-  //molecule.addBranch(4, makeCarbonChain(4, #0000FF));
+  // 2-methyl-3-ethyl-4-butyl
+  molecule.addBranch(2, makeCarbonChain(1, #FF0000));
+  molecule.addBranch(3, makeCarbonChain(2, #00FF00));
+  molecule.addBranch(4, makeCarbonChain(4, #0000FF));
 
-  //// 4-bromo-5-chloro
-  //molecule.addBranch(4, new Atom("Br", 1, #FF00FF));
-  //molecule.addBranch(5, new Atom("Cl", 1, #CCCC00));
+  // 6-ene-9-yne
+  if (molecule.mainFunc == "alkene")
+    molecule.baseChain[6].setNumBonds(2);
+  else if (molecule.mainFunc == "alkyne")
+    molecule.baseChain[6].setNumBonds(3);
+  //molecule.baseChain[9].numBonds = 3;
 
-  //// 11-amino-12-hydroxy
-  //molecule.addBranch(11, new Atom("N", 3, #00FF99));
-  //molecule.addBranch(12, new Atom("O", 2, #FF9900));
+  // 4-bromo-5-chloro
+  molecule.addBranch(4, new Atom("Br", 1, #FF00FF));
+  molecule.addBranch(5, new Atom("Cl", 1, #CCCC00));
 
-  //// 12-oxo
-  //Atom oxoBranch = new Atom("O", 2, #00FFFF);
-  //oxoBranch.setNumBonds(2);
-  //molecule.addBranch(12, oxoBranch);
+  // 11-amino-12-hydroxy
+  molecule.addBranch(11, new Atom("N", 3, #00FF99));
+  molecule.addBranch(12, new Atom("O", 2, #FF9900));
+
+  // 12-oxo
+  Atom oxoBranch = new Atom("O", 2, #00FFFF);
+  oxoBranch.setNumBonds(2);
+  molecule.addBranch(12, oxoBranch);
 }
 
 void keyPressed() {
