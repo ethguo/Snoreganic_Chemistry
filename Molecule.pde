@@ -37,71 +37,66 @@ class Molecule {
   }
 
   void activateFunctionalGroup() {
-<<<<<<< HEAD
     String[] m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
     while (m1 != null) {
-=======
-    //2,2-dichloro-4-iodohept-2-yne-3,5-diol
-    String[] m1 ={"-1,8-dioic acid", "1,8", "dioic acid"};
->>>>>>> 5fcf82cae9b1a3ec0af5a08637f7ddcea2d16983
-    String[] locants = m1[1].split(",");
+      String[] locants = m1[1].split(",");
 
-    if (m1[2].contains("ane"))
-      {}  
-      
-    else if (m1[2].contains("ene")){
-      for (int i=0; i<locants.length;i++)
-        this.baseChain[parseInt(locants[i])].setNumBonds(2);        
-    }
-    
-    else if (m1[2].contains("yne")){
-      for (int i=0; i<locants.length;i++)
-        this.baseChain[parseInt(locants[i])].setNumBonds(3);        
-    }
+      if (m1[2].contains("ane"))
+        {}  
         
-    else if (m1[2].contains("ol")){
-      for (int i=0; i<locants.length;i++)
-        this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));       
-    }
+      else if (m1[2].contains("ene")){
+        for (int i=0; i<locants.length;i++)
+          this.baseChain[parseInt(locants[i])].setNumBonds(2);        
+      }
       
-    else if (m1[2].contains("al")){
-      Atom carbonyl = new Atom("O", 2, #00FFFF);
-      carbonyl.setNumBonds(2);
-      this.addBranch(1, carbonyl);
-      
-      if(m1[2].contains("dial")){
-        Atom carbonyl2 = new Atom("O", 2, #00FFFF);
-        carbonyl2.setNumBonds(2);
-        this.addBranch(this.numCarbons, carbonyl2);
-      }      
-    }
-      
-    else if (m1[2].contains("one")){
-      for (int i=0; i<locants.length;i++){
+      else if (m1[2].contains("yne")){
+        for (int i=0; i<locants.length;i++)
+          this.baseChain[parseInt(locants[i])].setNumBonds(3);        
+      }
+          
+      else if (m1[2].contains("ol")){
+        for (int i=0; i<locants.length;i++)
+          this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));       
+      }
+        
+      else if (m1[2].contains("al")){
         Atom carbonyl = new Atom("O", 2, #00FFFF);
         carbonyl.setNumBonds(2);
-        this.addBranch(parseInt(locants[i]), carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
-      }    
-    }
-    
-    else if (m1[2].contains("oic acid")){
-      Atom carbonyl = new Atom("O", 2, #00FFFF);
-      carbonyl.setNumBonds(2);
-      this.addBranch(1, carbonyl);
-      this.addBranch(1, new Atom("O", 2, #00FFFF));
+        this.addBranch(1, carbonyl);
+        
+        if(m1[2].contains("dial")){
+          Atom carbonyl2 = new Atom("O", 2, #00FFFF);
+          carbonyl2.setNumBonds(2);
+          this.addBranch(this.numCarbons, carbonyl2);
+        }      
+      }
+        
+      else if (m1[2].contains("one")){
+        for (int i=0; i<locants.length;i++){
+          Atom carbonyl = new Atom("O", 2, #00FFFF);
+          carbonyl.setNumBonds(2);
+          this.addBranch(parseInt(locants[i]), carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
+        }    
+      }
       
-      if(m1[2].contains("dioic acid")){
-        Atom carbonyl2 = new Atom("O", 2, #00FFFF);
-        carbonyl2.setNumBonds(2);
-        this.addBranch(this.numCarbons, carbonyl2);
-        this.addBranch(this.numCarbons, new Atom("O", 2, #00FFFF));
-      }  
-    }
-            
-    else {}
+      else if (m1[2].contains("oic acid")){
+        Atom carbonyl = new Atom("O", 2, #00FFFF);
+        carbonyl.setNumBonds(2);
+        this.addBranch(1, carbonyl);
+        this.addBranch(1, new Atom("O", 2, #00FFFF));
+        
+        if(m1[2].contains("dioic acid")){
+          Atom carbonyl2 = new Atom("O", 2, #00FFFF);
+          carbonyl2.setNumBonds(2);
+          this.addBranch(this.numCarbons, carbonyl2);
+          this.addBranch(this.numCarbons, new Atom("O", 2, #00FFFF));
+        }  
+      }
+              
+      else {}
 
-    this.name = this.name.substring(0, this.name.length() - m1[0].length());
-    m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
+      this.name = this.name.substring(0, this.name.length() - m1[0].length());
+      m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
     }
   }
   
