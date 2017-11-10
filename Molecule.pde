@@ -37,8 +37,8 @@ class Molecule {
   }
 
   void activateFunctionalGroup() {
-    //2,2-dichloro-4-iodohept-2-yne-3,5-diol
-    String[] m1 ={"-3,5-diol", "3,5", "diol"};
+    String[] m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
+    while (m1 != null) {
     String[] locants = m1[1].split(",");
 
     if (m1[2].contains("ane"))
@@ -80,6 +80,10 @@ class Molecule {
     }
             
     else {}
+
+    this.name = this.name.substring(0, this.name.length() - m1[0].length());
+    m1 = match(this.name, "-(\\d+(?:,\\d+)*)-(\\w+(?: acid)?)$");
+    }
   }
   
   String findFunctionalGroup() {

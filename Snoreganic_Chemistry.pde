@@ -27,8 +27,8 @@ void draw() {
   }
 }
 
-void createMolecule() {
-  molecule = new Molecule(ui.input); 
+void createMolecule(String input) {
+  molecule = new Molecule(input); 
 
   //// 2-methyl-3-ethyl-4-butyl
   //molecule.addBranch(2, makeCarbonChain(1, #FF0000));
