@@ -1,95 +1,145 @@
+String[] alkPrefixes = {"eicos","nonadec","octadec","heptadec","hexadec","pentadec","tetradec","tridec","dodec","undec","dec","non","oct","hept","hex","pent","but","prop","meth","eth"};
+int[] alkPrefixNums = {20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,1,2};
+
 class Molecule {
   String name;
   int numCarbons;
   Atom[] baseChain;
+  ArrayList<Integer> tempLocants;
+  ArrayList<Atom> tempBranches;
+  ArrayList<Integer> tempBondLocants;
+  ArrayList<Integer> tempNumBonds;
 
   Molecule(String name) {
     this.name = name;
-    this.numCarbons = this.findNumMainChain();
-    this.baseChain = new Atom[this.numCarbons];
-    this.baseChain[this.numCarbons-1] = new Atom();
+    this.baseChain = null;
 
-    for (int i = this.numCarbons-2; i >= 0; i--) {
-      this.baseChain[i] = new Atom();
-      this.baseChain[i].addChild(this.baseChain[i+1]);
+    this.tempLocants = new ArrayList<Integer>();
+    this.tempBranches = new ArrayList<Atom>();
+
+    this.tempBondLocants = new ArrayList<Integer>();
+    this.tempNumBonds = new ArrayList<Integer>();
+
+    String[][] groups = matchAll(name, "(?:(\\d+(?:,\\d+)*)-)?(\\w+(?: acid)?)");
+    for (int i = 0; i < groups.length; i++) {
+      this.parseGroup(groups[i]);
     }
-    activateFunctionalGroup();
   }
 
   void draw() {
-    this.baseChain[0].drawChildren(new PVector(100, height/2), PI/6);
+    this.baseChain[0].drawChildren(new PVector(width/2 -20*numCarbons, height/2), PI/6);
   }
 
   void addBranch(int index, Atom branch) {
-    this.baseChain[index-1].addChild(branch);
+    if (this.baseChain == null) {
+      this.tempLocants.add(index);
+      this.tempBranches.add(branch);
+    }
+    else {
+      this.baseChain[index-1].addChild(branch);
+    }
   }
 
-  int findNumMainChain() {
-    int len = this.name.length();
-    String func = this.findFunctionalGroup();
-
-    int n = this.findNumCarbons(0, len, func);
-
-    return n;
+  void setNumBonds(int index, int numBonds) {
+    if (this.baseChain == null) {
+      this.tempBondLocants.add(index);
+      this.tempNumBonds.add(numBonds);
+    }
+    else {
+      this.baseChain[index].setNumBonds(numBonds);
+    }
   }
 
-  void activateFunctionalGroup() {
-    String funcGroupRegex = "-?(?:(\\d+(?:,\\d+)*)-)?(\\w+(?: acid)?)$";
-    String[] m1 = match(this.name, funcGroupRegex);
-    while (m1 != null) {
-      String[] locants = m1[1].split(",");
+  void setBaseChain(int numCarbons) {
+    this.numCarbons = numCarbons;
+    this.baseChain = new Atom[numCarbons];
+    this.baseChain[numCarbons-1] = new Atom();
 
-      if (m1[2].contains("ane")) {
+    for (int i = numCarbons-2; i >= 0; i--) {
+      this.baseChain[i] = new Atom();
+      this.baseChain[i].addChild(this.baseChain[i+1]);
+    }
 
-      }
+    // Add all the branches from the temp ArrayLists
+    for (int i = 0; i < this.tempBranches.size(); i++)
+      addBranch(this.tempLocants.get(i), this.tempBranches.get(i));
 
-      else if (m1[2].contains("ene")) {
+    this.tempLocants = null;
+    this.tempBranches = null;
+  }
+
+  void parseGroup(String[] group) {
+    String groupName = group[2];
+
+    int[] locants;
+    if (group[1] == null) {
+      locants = new int[] {1};
+    }
+    else {
+      String[] locantStrings = group[1].split(",");
+      locants = new int[locantStrings.length];
+      for (int i = 0; i < locantStrings.length; i++)
+        locants[i] = parseInt(locantStrings[i]);
+    }
+    addGroup(locants, groupName);
+  }
+
+  boolean addGroup(int[] locants, String groupName) {
+    println("locants:");
+    printArray(locants);
+    println("groupName: " + groupName);
+    // Returns true if successfully identified the branch, false otherwise.
+    boolean success = false; //TODO: catch if success is still false after the loop
+    int len = groupName.length();
+    // try {
+      if (endsWith(groupName, "ene")) {
         for (int i=0; i<locants.length;i++)
-          this.baseChain[parseInt(locants[i])].setNumBonds(2);
+          //-enes and -ynes should only come after the base chain number identifier, so this should be safe
+          this.baseChain[locants[i]].setNumBonds(2);
       }
 
-      else if (m1[2].contains("yne")) {
+      else if (endsWith(groupName, "yne")) {
         for (int i=0; i<locants.length;i++)
-          this.baseChain[parseInt(locants[i])].setNumBonds(3);
+          this.baseChain[locants[i]].setNumBonds(3);
       }
 
-      else if (m1[2].contains("amine")) {
-        for(int i=0; i<locants.length; i++)
-          this.addBranch(parseInt(locants[i]), new Atom("N", 3, #035606));
+      else if (endsWith(groupName, "amine")) {
+        for (int i=0; i<locants.length; i++)
+          this.addBranch(locants[i], new Atom("N", 3, #035606));
       }
 
-      else if (m1[2].contains("ol")) {
+      else if (endsWith(groupName, "ol")) {
         for (int i=0; i<locants.length;i++)
-          this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));
+          this.addBranch(locants[i], new Atom("O", 2, #FF9900));
       }
 
-      else if (m1[2].contains("al")) {
+      else if (endsWith(groupName, "one")) {
+        for (int i=0; i<locants.length;i++) {
+          Atom carbonyl = new Atom("O", 2, #00FFFF);
+          carbonyl.setNumBonds(2);
+          this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
+        }
+      }
+
+      else if (endsWith(groupName, "al")) {
         Atom carbonyl = new Atom("O", 2, #00FFFF);
         carbonyl.setNumBonds(2);
         this.addBranch(1, carbonyl);
 
-        if(m1[2].contains("dial")) {
+        if(endsWith(groupName, "dial")) {
           Atom carbonyl2 = new Atom("O", 2, #00FFFF);
           carbonyl2.setNumBonds(2);
           this.addBranch(this.numCarbons, carbonyl2);
         }
       }
 
-      else if (m1[2].contains("one")) {
-        for (int i=0; i<locants.length;i++) {
-          Atom carbonyl = new Atom("O", 2, #00FFFF);
-          carbonyl.setNumBonds(2);
-          this.addBranch(parseInt(locants[i]), carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
-        }
-      }
-
-      else if (m1[2].contains("oic acid")) {
+      else if (endsWith(groupName, "oic acid")) {
         Atom carbonyl = new Atom("O", 2, #00FFFF);
         carbonyl.setNumBonds(2);
         this.addBranch(1, carbonyl);
         this.addBranch(1, new Atom("O", 2, #00FFFF));
 
-        if(m1[2].contains("dioic acid")) {
+        if(endsWith(groupName, "dioic acid")) {
           Atom carbonyl2 = new Atom("O", 2, #00FFFF);
           carbonyl2.setNumBonds(2);
           this.addBranch(this.numCarbons, carbonyl2);
@@ -97,102 +147,76 @@ class Molecule {
         }
       }
 
-      else {}
+      //TODO: Halogens
 
-      this.name = this.name.substring(0, this.name.length() - m1[0].length());
-      m1 = match(this.name, funcGroupRegex);
-    }
+      else if (endsWith(groupName, "yl")) {
+        // Alkyl branch, ex. "methyl"
+        String alkPrefix = groupName.substring(0, len - 2);
+        for (int i = 0; i < alkPrefixes.length; i++) {
+          if (endsWith(alkPrefix, alkPrefixes[i])) {
+            success = true;
+            for (int j = 0; j < locants.length; j++) {
+              Atom alkyl = makeCarbonChain(alkPrefixNums[i], #FF0000);
+              this.addBranch(locants[j], alkyl);
+            }
+            break;
+          }
+        }
+      }
+      else if (endsWith(groupName, "oxy")) {
+        // Alkoxy branch, ex. "methoxy"
+        String alkPrefix = groupName.substring(0, len - 3);
+        for (int i = 0; i < alkPrefixes.length; i++) {
+          if (endsWith(alkPrefix, alkPrefixes[i])) {
+            success = true;
+            for (int j = 0; j < locants.length; j++) {
+              Atom alkoxy = new Atom("O", 2, #9999FF);
+              alkoxy.addChild(makeCarbonChain(alkPrefixNums[i], #9999FF));
+              this.addBranch(locants[j], alkoxy);
+            }
+            break;
+          }
+        }
+      }
+      else {
+        // Probably contains the base chain number
+        if (endsWith(groupName, "ane")) {
+          groupName = groupName.substring(0, len - 3);
+        }
+        if (endsWith(groupName, "an")) {
+          groupName = groupName.substring(0, len - 2);
+        }
+
+        println("alkane!");
+        println(groupName);
+
+        for (int i = 0; i < alkPrefixes.length; i++) {
+          String alkPrefix = alkPrefixes[i];
+          // String prefixCandidate = groupName.substring(len - alkPrefix.length());
+          if (endsWith(groupName, alkPrefix)) {
+            // success = true;
+            this.setBaseChain(alkPrefixNums[i]);
+
+            // In a case like "2-methylhexane", we still need to parse the "2-methyl" as a branch.
+            String branchName = groupName.substring(0, groupName.length() - alkPrefix.length());
+            if (!branchName.equals(""))
+              success = this.addGroup(locants, branchName);
+            break;
+          }
+        }
+      }
+    // }
+    // catch (RuntimeException e) {
+    //   println(e.getMessage());
+    // }
+    return success;
   }
-  
-  String findFunctionalGroup() {
-    int len = this.name.length();
-    String last4 = this.name.substring(len-4);
+}
 
-    if (last4.contains("ane"))
-      return "alkane";
-    else if (last4.contains("ene"))
-      return "alkene";
-    else if (last4.contains("yne"))
-      return "alkyne";
-    else if (last4.contains("ol"))
-      return "alcohol";
-    else if (last4.contains("al"))
-      return "aldehyde";
-    else if (last4.contains("one"))
-      return "ketone";
-    else if (last4.contains("oate"))
-      return "ester";
-    else
-      return "unknown";
-  } 
-
-  int findNumCarbons(int i1, int i2, String func) {
-    int n;
-    String funcChunk = this.name.substring(i1,i2);
-
-    String end;
-    if (func.equals("alkane"))
-      end = "ane";
-    else if (func.equals("alkene"))
-      end = "ene";
-    else if (func.equals("alkyne"))
-      end = "yne";
-    else if (func.equals("alcohol"))
-      end = "anol";
-    else if (func.equals("aldehyde"))
-      end = "anal";
-    else if (func.equals("ketone"))
-      end = "one";
-    else if (func.equals("ester"))
-      end = "anoate";
-    else
-      end = "";
-
-    if (funcChunk.contains("eicos"))
-      n = 20;
-    else if (funcChunk.contains("nonadec"))
-      n = 19;
-    else if (funcChunk.contains("octadec"))
-      n = 18;
-    else if (funcChunk.contains("heptadec"))
-      n = 17;
-    else if (funcChunk.contains("hexadec"))
-      n = 16;
-    else if (funcChunk.contains("pentadec"))
-      n = 15;
-    else if (funcChunk.contains("tetradec"))
-      n = 14;
-    else if (funcChunk.contains("tridec"))
-      n = 13;
-    else if (funcChunk.contains("dodec"))
-      n = 12;
-    else if (funcChunk.contains("undec"))
-      n = 11;
-    else if (funcChunk.contains("dec"))
-      n = 10;
-    else if (funcChunk.contains("non"))
-      n = 9;
-    else if (funcChunk.contains("oct"))
-      n = 8;
-    else if (funcChunk.contains("hept"))
-      n = 7;
-    else if (funcChunk.contains("hex"))
-      n = 6;
-    else if (funcChunk.contains("pent"))
-      n = 5;
-    else if (funcChunk.contains("but"))
-      n = 4;
-    else if (funcChunk.contains("prop"))
-      n = 3;
-    else if (funcChunk.contains("eth"))
-      n = 2;
-    else if (funcChunk.contains("meth"))
-      n = 1;
-    else
-      n = 0;
-
-    return n;
-  }
+boolean endsWith(String s, String end) {
+  return (s.length() >= end.length() &&
+          s.substring(s.length() - end.length()).equals(end));
+}
 
 Atom makeCarbonChain(int n) {
   return makeCarbonChain(n, defaultLineColor);
