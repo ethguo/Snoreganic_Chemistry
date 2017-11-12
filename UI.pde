@@ -161,7 +161,7 @@ class UI {
     if (this.ddm.state == true) {
       for (int i = 0; i < this.ddm.buttonPositions.length; i++) {
         if ((mouseX > this.ddm.buttonPositions[i].x && mouseX < this.ddm.buttonPositions[i].x + this.ddm.rectWidth) && (mouseY > this.ddm.buttonPositions[i].y && mouseY < this.ddm.buttonPositions[i].y + this.ddm.rectHeight)) {
-          this.input = this.ddm.commonNamesIUPAC[i];
+          this.input = this.ddm.commonNamesIUPACLines[i];
           this.cursor = this.input.length();
 
           createMolecule();

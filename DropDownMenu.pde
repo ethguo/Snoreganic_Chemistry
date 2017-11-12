@@ -1,8 +1,9 @@
 class DropDownMenu {
   boolean state;
   PVector[] buttonPositions;
-  String[] commonNamesIUPAC = {"2-methyl-1,3-butadiene", "propanone", "", "", "", "", "", "", "", "", "", ""};
-  String[] commonNames = {"Isoprene", "Acetone", "", "", "", "", "", "", "", "", "", ""};
+  String[] commonNamesLines = loadStrings("data/commonNames.txt");
+  String[] commonNamesIUPACLines = loadStrings("data/commonNamesIUPAC.txt");
+  String[] commonNamesIUPACDisplayLines = loadStrings("data/commonNamesIUPACDisplay.txt");
   int marginWidth = width / 40;
   int marginHeight = (height * 9 / 10) / 30;
   int rectWidth = width / 5;
@@ -14,7 +15,7 @@ class DropDownMenu {
 
     int c = 0;
 
-    while (c < this.buttonPositions.length) {
+    while (c < this.buttonPositions.length) {      
       for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 3; j++) {
           this.buttonPositions[c] = new PVector(i * width / 4, j * (height * 9 / 10) / 3 + (height / 10));
@@ -31,11 +32,13 @@ class DropDownMenu {
       stroke(#1a1a1a);
       strokeWeight(1);
       rect(this.buttonPositions[i].x + marginWidth, this.buttonPositions[i].y + marginHeight, this.rectWidth, this.rectHeight);
+      
+      commonNamesIUPACDisplayLines[i] = commonNamesIUPACDisplayLines[i].replace("\\n", "\n");
 
       fill(#666666);
       textSize(15);
-      text("(" + commonNamesIUPAC[i] + ")", this.buttonPositions[i].x + marginWidth + this.rectWidth / 2, this.buttonPositions[i].y + marginHeight + this.rectHeight * 3 / 4);
-      text(commonNames[i], this.buttonPositions[i].x + marginWidth + this.rectWidth / 2, this.buttonPositions[i].y + marginHeight + this.rectHeight / 4);
+      text("(" + commonNamesIUPACDisplayLines[i] + ")", this.buttonPositions[i].x + marginWidth + this.rectWidth / 2, this.buttonPositions[i].y + marginHeight + this.rectHeight * 2 / 4);
+      text(commonNamesLines[i], this.buttonPositions[i].x + marginWidth + this.rectWidth / 2, this.buttonPositions[i].y + marginHeight + this.rectHeight / 4);
     }
   }
 }
