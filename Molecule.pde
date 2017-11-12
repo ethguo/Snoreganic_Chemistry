@@ -13,7 +13,7 @@ class Molecule {
       this.baseChain[i] = new Atom();
       this.baseChain[i].addChild(this.baseChain[i+1]);
     }
-    activateFunctionalGroup();   
+    activateFunctionalGroup();
   }
 
   void draw() {
@@ -39,63 +39,64 @@ class Molecule {
     while (m1 != null) {
       String[] locants = m1[1].split(",");
 
-      if (m1[2].contains("ane"))
-        {}  
-        
-      else if (m1[2].contains("ene")){
-        for (int i=0; i<locants.length;i++)
-          this.baseChain[parseInt(locants[i])].setNumBonds(2);        
+      if (m1[2].contains("ane")) {
+
       }
-      
-      else if (m1[2].contains("yne")){
+
+      else if (m1[2].contains("ene")) {
         for (int i=0; i<locants.length;i++)
-          this.baseChain[parseInt(locants[i])].setNumBonds(3);        
+          this.baseChain[parseInt(locants[i])].setNumBonds(2);
       }
-          
-      else if (m1[2].contains("amine")){
+
+      else if (m1[2].contains("yne")) {
+        for (int i=0; i<locants.length;i++)
+          this.baseChain[parseInt(locants[i])].setNumBonds(3);
+      }
+
+      else if (m1[2].contains("amine")) {
         for(int i=0; i<locants.length; i++)
           this.addBranch(parseInt(locants[i]), new Atom("N", 3, #035606));
       }
-          
-      else if (m1[2].contains("ol")){
+
+      else if (m1[2].contains("ol")) {
         for (int i=0; i<locants.length;i++)
-          this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));       
+          this.addBranch(parseInt(locants[i]), new Atom("O", 2, #FF9900));
       }
-      
-      else if (m1[2].contains("al")){
+
+      else if (m1[2].contains("al")) {
         Atom carbonyl = new Atom("O", 2, #00FFFF);
         carbonyl.setNumBonds(2);
         this.addBranch(1, carbonyl);
-        
-        if(m1[2].contains("dial")){
+
+        if(m1[2].contains("dial")) {
           Atom carbonyl2 = new Atom("O", 2, #00FFFF);
           carbonyl2.setNumBonds(2);
           this.addBranch(this.numCarbons, carbonyl2);
-        }      
+        }
       }
-        
-      else if (m1[2].contains("one")){
-        for (int i=0; i<locants.length;i++){
+
+      else if (m1[2].contains("one")) {
+        for (int i=0; i<locants.length;i++) {
           Atom carbonyl = new Atom("O", 2, #00FFFF);
           carbonyl.setNumBonds(2);
           this.addBranch(parseInt(locants[i]), carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
-        }    
+        }
       }
-      
-      else if (m1[2].contains("oic acid")){
+
+      else if (m1[2].contains("oic acid")) {
         Atom carbonyl = new Atom("O", 2, #00FFFF);
         carbonyl.setNumBonds(2);
         this.addBranch(1, carbonyl);
         this.addBranch(1, new Atom("O", 2, #00FFFF));
-        
-        if(m1[2].contains("dioic acid")){
+
+        if(m1[2].contains("dioic acid")) {
           Atom carbonyl2 = new Atom("O", 2, #00FFFF);
           carbonyl2.setNumBonds(2);
           this.addBranch(this.numCarbons, carbonyl2);
           this.addBranch(this.numCarbons, new Atom("O", 2, #00FFFF));
-        }  
+        }
       }
-        
+
       else {}
 
       this.name = this.name.substring(0, this.name.length() - m1[0].length());
@@ -136,7 +137,7 @@ class Molecule {
       end = "ene";
     else if (func.equals("alkyne"))
       end = "yne";
-    else if (func.equals("alkohol"))
+    else if (func.equals("alcohol"))
       end = "anol";
     else if (func.equals("aldehyde"))
       end = "anal";
@@ -202,5 +203,4 @@ Atom makeCarbonChain(int n, color lineColor) {
   if (n > 1)
     chain.addChild(makeCarbonChain(n-1, lineColor));
   return chain;
-}
 }

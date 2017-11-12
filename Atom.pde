@@ -93,9 +93,9 @@ class Atom {
       int numHydrogens = this.bondingNumber - this.numChildren - this.numBonds;
       if (numHydrogens >= 1) {
         symbol += "H";
-        if (numHydrogens == 2) 
+        if (numHydrogens == 2)
           symbol += "\u2082";
-        if (numHydrogens == 3) 
+        if (numHydrogens == 3)
           symbol += "\u2083";
       }
       text(symbol, newCoords.x, newCoords.y);

@@ -62,7 +62,7 @@ class UI {
       }
     } else {
       if (key == ENTER) {
-        createMolecule(this.input);
+        createMolecule(this.input.toLowerCase());
       } else if (key == BACKSPACE && this.cursor > 0) {
         this.cursor--;
         this.input = this.popChar(this.cursor);
@@ -83,7 +83,7 @@ class UI {
     } else if (this.green.overButton() == true) {
       this.green.colour = #408040;
 
-      createMolecule(this.input);
+      createMolecule(this.input.toLowerCase());
     } else if (this.yellow.overButton() == true) {
       this.yellow.colour = #808040;
 

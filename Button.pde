@@ -9,8 +9,6 @@ class Button {
     this.size = height / 20;
     this.radius = this.size / 2;
     this.colour = colour_;
-
-    println(this.colour);
   }
 
   void draw() {
