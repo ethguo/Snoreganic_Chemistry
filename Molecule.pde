@@ -36,7 +36,10 @@ class Molecule {
       this.tempBranches.add(branch);
     }
     else {
-      this.baseChain[index-1].addChild(branch);
+      if (index == -1)
+        this.baseChain[this.numCarbons-1].addChild(branch);
+      else
+        this.baseChain[index-1].addChild(branch);
     }
   }
 
@@ -97,62 +100,7 @@ class Molecule {
     boolean success = false; //TODO: catch if success is still false after the loop
     int len = groupName.length();
     // try {
-      if (endsWith(groupName, "ene")) {
-        for (int i = 0; i < locants.length; i++)
-          //-enes and -ynes should only come after the base chain number identifier, so this should be safe
-          this.setNumBonds(locants[i], 2);
-      }
-
-      else if (endsWith(groupName, "yne")) {
-        for (int i = 0; i < locants.length; i++)
-          this.setNumBonds(locants[i], 3);
-      }
-
-      else if (endsWith(groupName, "amine")) {
-        for (int i = 0; i < locants.length; i++)
-          this.addBranch(locants[i], new Atom("N", 3, #035606));
-      }
-
-      else if (endsWith(groupName, "ol")) {
-        for (int i = 0; i < locants.length; i++)
-          this.addBranch(locants[i], new Atom("O", 2, #FF9900));
-      }
-
-      else if (endsWith(groupName, "one")) {
-        for (int i = 0; i < locants.length; i++) {
-          Atom carbonyl = new Atom("O", 2, #00FFFF);
-          carbonyl.setNumBonds(2);
-          this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
-        }
-      }
-
-      else if (endsWith(groupName, "al")) {
-        Atom carbonyl = new Atom("O", 2, #00FFFF);
-        carbonyl.setNumBonds(2);
-        this.addBranch(1, carbonyl);
-
-        if(endsWith(groupName, "dial")) {
-          Atom carbonyl2 = new Atom("O", 2, #00FFFF);
-          carbonyl2.setNumBonds(2);
-          this.addBranch(this.numCarbons, carbonyl2);
-        }
-      }
-
-      else if (endsWith(groupName, "oic acid")) {
-        Atom carbonyl = new Atom("O", 2, #00FFFF);
-        carbonyl.setNumBonds(2);
-        this.addBranch(1, carbonyl);
-        this.addBranch(1, new Atom("O", 2, #00FFFF));
-
-        if(endsWith(groupName, "dioic acid")) {
-          Atom carbonyl2 = new Atom("O", 2, #00FFFF);
-          carbonyl2.setNumBonds(2);
-          this.addBranch(this.numCarbons, carbonyl2);
-          this.addBranch(this.numCarbons, new Atom("O", 2, #00FFFF));
-        }
-      }
-
-      else if (endsWith(groupName, "fluoro")) {
+      if (endsWith(groupName, "fluoro")) {
         for (int i = 0; i < locants.length; i++)
           this.addBranch(locants[i], new Atom("F", 1, #66FF00));
       }
@@ -199,29 +147,97 @@ class Molecule {
         }
       }
       else {
-        // Probably contains the base chain number
+        // If any functional groups match, remainder will contain the rest of the string
+        // (minus the functional group suffix).
+        String remainder = null;
+
+        if (endsWith(groupName, "ene")) {
+          remainder = groupName.substring(0, len - 3);
+          for (int i = 0; i < locants.length; i++)
+            this.setNumBonds(locants[i], 2);
+        }
+
+        else if (endsWith(groupName, "yne")) {
+          remainder = groupName.substring(0, len - 3);
+          for (int i = 0; i < locants.length; i++)
+            this.setNumBonds(locants[i], 3);
+        }
+
+        else if (endsWith(groupName, "amine")) {
+          remainder = groupName.substring(0, len - 5);
+          for (int i = 0; i < locants.length; i++)
+            this.addBranch(locants[i], new Atom("N", 3, #035606));
+        }
+
+        else if (endsWith(groupName, "ol")) {
+          remainder = groupName.substring(0, len - 2);
+          for (int i = 0; i < locants.length; i++)
+            this.addBranch(locants[i], new Atom("O", 2, #FF9900));
+        }
+
+        else if (endsWith(groupName, "one")) {
+          remainder = groupName.substring(0, len - 3);
+          for (int i = 0; i < locants.length; i++) {
+            Atom carbonyl = new Atom("O", 2, #00FFFF);
+            carbonyl.setNumBonds(2);
+            this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
+          }
+        }
+
+        else if (endsWith(groupName, "al")) {
+          remainder = groupName.substring(0, len - 2);
+          Atom carbonyl = new Atom("O", 2, #00FFFF);
+          carbonyl.setNumBonds(2);
+          this.addBranch(1, carbonyl);
+
+          // -dial
+          if(endsWith(remainder, "di")) {
+            remainder = remainder.substring(0, remainder.length() - 2);
+            Atom carbonyl2 = new Atom("O", 2, #00FFFF);
+            carbonyl2.setNumBonds(2);
+            this.addBranch(-1, carbonyl2);
+          }
+        }
+
+        else if (endsWith(groupName, "oic acid")) {
+          remainder = groupName.substring(0, len - 8);
+          Atom carbonyl = new Atom("O", 2, #00FFFF);
+          carbonyl.setNumBonds(2);
+          this.addBranch(1, carbonyl);
+          this.addBranch(1, new Atom("O", 2, #00FFFF));
+
+          // -dioic acid
+          if(endsWith(remainder, "di")) {
+            remainder = remainder.substring(0, remainder.length() - 2);
+            Atom carbonyl2 = new Atom("O", 2, #00FFFF);
+            carbonyl2.setNumBonds(2);
+            this.addBranch(-1, carbonyl2);
+            this.addBranch(-1, new Atom("O", 2, #00FFFF));
+          }
+        }
+
         if (endsWith(groupName, "ane")) {
-          groupName = groupName.substring(0, len - 3);
+          remainder = groupName.substring(0, len - 3);
         }
-        if (endsWith(groupName, "an")) {
-          groupName = groupName.substring(0, len - 2);
+        // For ex. "1-ethanol" -> "ethan" -> "eth"
+        if (endsWith(remainder, "an")) {
+          remainder = remainder.substring(0, remainder.length() - 2);
         }
 
-        println("alkane!");
-        println(groupName);
+        if (remainder != null) {
+          for (int i = 0; i < alkPrefixes.length; i++) {
+            String alkPrefix = alkPrefixes[i];
+            // String prefixCandidate = groupName.substring(len - alkPrefix.length());
+            if (endsWith(remainder, alkPrefix)) {
+              // success = true;
+              this.setBaseChain(alkPrefixNums[i]);
 
-        for (int i = 0; i < alkPrefixes.length; i++) {
-          String alkPrefix = alkPrefixes[i];
-          // String prefixCandidate = groupName.substring(len - alkPrefix.length());
-          if (endsWith(groupName, alkPrefix)) {
-            // success = true;
-            this.setBaseChain(alkPrefixNums[i]);
-
-            // In a case like "2-methylhexane", we still need to parse the "2-methyl" as a branch.
-            String branchName = groupName.substring(0, groupName.length() - alkPrefix.length());
-            if (!branchName.equals(""))
-              success = this.addGroup(locants, branchName);
-            break;
+              // In a case like "2-methylhexane", we still need to parse the "2-methyl" as a branch.
+              String branchName = remainder.substring(0, remainder.length() - alkPrefix.length());
+              if (!branchName.equals(""))
+                success = this.addGroup(locants, branchName);
+              break;
+            }
           }
         }
       }
