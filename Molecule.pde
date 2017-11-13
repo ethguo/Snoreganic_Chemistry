@@ -152,7 +152,22 @@ class Molecule {
         }
       }
 
-      //TODO: Halogens
+      else if (endsWith(groupName, "fluoro")) {
+        for (int i = 0; i < locants.length; i++)
+          this.addBranch(locants[i], new Atom("F", 1, #66FF00));
+      }
+      else if (endsWith(groupName, "chloro")) {
+        for (int i = 0; i < locants.length; i++)
+          this.addBranch(locants[i], new Atom("Cl", 1, #66FF00));
+      }
+      else if (endsWith(groupName, "bromo")) {
+        for (int i = 0; i < locants.length; i++)
+          this.addBranch(locants[i], new Atom("Br", 1, #66FF00));
+      }
+      else if (endsWith(groupName, "iodo")) {
+        for (int i = 0; i < locants.length; i++)
+          this.addBranch(locants[i], new Atom("I", 1, #66FF00));
+      }
 
       else if (endsWith(groupName, "yl")) {
         // Alkyl branch, ex. "methyl"
