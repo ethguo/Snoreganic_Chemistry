@@ -132,4 +132,36 @@ class Atom {
       }
     }
   }
+
+  void drawRoot(int numCarbons) {
+    float angle = PI/6;
+    PVector fromCoords = new PVector((width - this.bondLength*cos(angle)*numCarbons) / 2, height/2);
+    if (numChildren == 4) {
+      // Handles a 4-way intersection (90 degree angles)
+      // The first child should be the next carbon; should go straight out
+      this.children[0].draw(fromCoords, angle);
+      this.children[1].draw(fromCoords, angle + PI/2);
+      this.children[2].draw(fromCoords, angle + PI);
+      this.children[3].draw(fromCoords, angle - PI/2);
+    }
+     else {
+      float sign;
+      if (angle > 0)
+        sign = -1;
+      else
+        sign = 1;
+
+      float baseAngle;
+      if (numBonds == 3)
+        baseAngle = angle;
+      else
+        baseAngle = angle + sign * PI/3;
+
+      for (int i = 0; i < numChildren; i++) {
+        float newAngle = baseAngle + sign * i * 2*PI/3;
+
+        this.children[i].draw(fromCoords, newAngle);
+      }
+    }
+  }
 }

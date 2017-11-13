@@ -27,7 +27,7 @@ class Molecule {
   }
 
   void draw() {
-    this.baseChain[0].drawChildren(new PVector(width/2 -20*numCarbons, height/2), PI/6);
+    this.baseChain[0].drawRoot(this.numCarbons);
   }
 
   void addBranch(int index, Atom branch) {
