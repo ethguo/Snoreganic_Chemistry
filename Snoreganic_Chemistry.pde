@@ -3,11 +3,12 @@ color defaultLineColor = #000000;
 int textMargin = 15;
 float bondOffset = 8;
 
+//set up the user interface and molecule to be drawn
 UI ui;
-
 Molecule molecule;
 
 void setup() {
+  //set up the interface
   size(960, 540);
   background(#ffffff);
   noLoop();
@@ -19,6 +20,7 @@ void setup() {
   ui = new UI();
 }
 
+//draw the user interface and the molecule, if possible
 void draw() {
   ui.draw();
   
@@ -27,28 +29,13 @@ void draw() {
   }
 }
 
+//create molecule from the inputted name
 void createMolecule(String input) {
   molecule = new Molecule(input); 
 
-  //// 2-methyl-3-ethyl-4-butyl
-  //molecule.addBranch(2, makeCarbonChain(1, #FF0000));
-  //molecule.addBranch(3, makeCarbonChain(2, #00FF00));
-  //molecule.addBranch(4, makeCarbonChain(4, #0000FF));
-
-  //// 4-bromo-5-chloro
-  //molecule.addBranch(4, new Atom("Br", 1, #FF00FF));
-  //molecule.addBranch(5, new Atom("Cl", 1, #CCCC00));
-
-  //// 11-amino-12-hydroxy
-  //molecule.addBranch(11, new Atom("N", 3, #00FF99));
-  //molecule.addBranch(12, new Atom("O", 2, #FF9900));
-
-  //// 12-oxo
-  //Atom oxoBranch = new Atom("O", 2, #00FFFF);
-  //oxoBranch.setNumBonds(2);
-  //molecule.addBranch(12, oxoBranch);
 }
 
+//event handling
 void keyPressed() {
   ui.keyPressed();
 }

@@ -4,6 +4,7 @@ class UI {
 
   Button grey, green, yellow, red;
 
+  //constructor
   UI() {
     this.grey = new Button(height / 40, height / 40, #999999);
     this.green = new Button(width - height * 9 / 40, height / 40, #80ff80);
@@ -11,6 +12,7 @@ class UI {
     this.red = new Button(width - height * 3 / 40, height / 40, #ff8080);
   }
 
+  //grey background for welcome screen
   void draw() {
     if (molecule == null) {
       background(#666666);
@@ -20,16 +22,16 @@ class UI {
 
     strokeWeight(1);
 
+    //creating top input bar
     fill(#333333);
     noStroke();
-
     rect(0, 0, width, height * 2 / 20);
 
     fill(#666666);
     stroke(#1a1a1a);
-
     rect(height / 10, height / 40, width - height * 7 / 20, height / 20, height / 40);
 
+    //draw the buttons
     this.grey.draw();
     this.green.draw();
     this.yellow.draw();
@@ -40,6 +42,7 @@ class UI {
     fill(#ffffff);
     textSize(15);
 
+    //managing the underscore cursor
     if (cursor == this.input.length()) {
       textWithCursor = this.input + " \u0332";
     } else {
@@ -49,6 +52,7 @@ class UI {
     text(textWithCursor, height / 10 + (width - height * 7 / 20) / 2, height / 20);
   }
 
+  //display name as it's being typed
   void keyPressed() {
     if (key == CODED) {
       if (keyCode == LEFT && this.cursor > 0) {
@@ -77,6 +81,7 @@ class UI {
     redraw();
   }
 
+  //identify which button was clicked
   void mousePressed() {
     if (this.grey.overButton() == true) {
       this.grey.colour = #4C4C4C;

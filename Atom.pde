@@ -2,6 +2,7 @@ class Atom {
   String element;
   int bondingNumber;
 
+  //atoms directly attached to and following the object in question are considered children
   Atom[] children;
   int numChildren;
   int numBonds; // Single, double or triple
@@ -9,14 +10,17 @@ class Atom {
   color lineColor;
   float bondLength = 50;
 
+  //constructor 1
   Atom() {
     this("C", 4, defaultLineColor);
   }
 
+  //constructor 2
   Atom(color lineColor) {
     this("C", 4, lineColor);
   }
 
+  //constructor 3
   Atom(String element, int bondingNumber, color lineColor) {
     this.element = element;
     this.bondingNumber = bondingNumber;
@@ -30,16 +34,18 @@ class Atom {
     numChildren++;
   }
 
+  //for double or triple bonds
   void setNumBonds(int numBonds) {
     this.numBonds = numBonds;
   }
 
+  //Draws each line segment in the molecule
   void draw(PVector fromCoords, float angle) {
     stroke(lineColor);
     fill(lineColor);
     strokeWeight(2);
 
-    if (this.numBonds == 3) { // If going into triple bond, cancel out the "bend"
+    if (this.numBonds == 3) { // Molecules are linear around a triple bond
       if (angle > 0)
         angle -= PI/3;
       else
@@ -51,6 +57,7 @@ class Atom {
     newCoords.setMag(this.bondLength);
     newCoords.add(fromCoords);
 
+    //Carbons have no need for a text symbol
     PVector bondLine = direction.copy();
     bondLine.setMag(this.bondLength);
     if (this.element.equals("C"))
@@ -88,15 +95,16 @@ class Atom {
       }
     }
 
+    //adds appropriate number of hydrogens for certain branches (eg. OH, NH2)
     if (!this.element.equals("C")) {
       String symbol = this.element;
       int numHydrogens = this.bondingNumber - this.numChildren - this.numBonds;
       if (numHydrogens >= 1) {
         symbol += "H";
         if (numHydrogens == 2)
-          symbol += "\u2082";
+          symbol += "\u2082"; //subscript 2
         if (numHydrogens == 3)
-          symbol += "\u2083";
+          symbol += "\u2083"; //subscript 3
       }
       text(symbol, newCoords.x, newCoords.y);
     }
@@ -119,6 +127,7 @@ class Atom {
       else
         sign = -1;
 
+      //unless triple bond, zig-zag the line angles
       float baseAngle;
       if (numBonds == 3)
         baseAngle = angle;
