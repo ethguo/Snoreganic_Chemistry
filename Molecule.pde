@@ -62,10 +62,15 @@ class Molecule {
 
     // Add all the branches from the temp ArrayLists
     for (int i = 0; i < this.tempBranches.size(); i++)
-      addBranch(this.tempLocants.get(i), this.tempBranches.get(i));
+      this.addBranch(this.tempLocants.get(i), this.tempBranches.get(i));
+
+    for (int i = 0; i < this.tempNumBonds.size(); i++)
+      this.setNumBonds(this.tempBondLocants.get(i), this.tempNumBonds.get(i));
 
     this.tempLocants = null;
     this.tempBranches = null;
+    this.tempBondLocants = null;
+    this.tempNumBonds = null;
   }
 
   void parseGroup(String[] group) {
@@ -93,28 +98,28 @@ class Molecule {
     int len = groupName.length();
     // try {
       if (endsWith(groupName, "ene")) {
-        for (int i=0; i<locants.length;i++)
+        for (int i = 0; i < locants.length; i++)
           //-enes and -ynes should only come after the base chain number identifier, so this should be safe
-          this.baseChain[locants[i]].setNumBonds(2);
+          this.setNumBonds(locants[i], 2);
       }
 
       else if (endsWith(groupName, "yne")) {
-        for (int i=0; i<locants.length;i++)
-          this.baseChain[locants[i]].setNumBonds(3);
+        for (int i = 0; i < locants.length; i++)
+          this.setNumBonds(locants[i], 3);
       }
 
       else if (endsWith(groupName, "amine")) {
-        for (int i=0; i<locants.length; i++)
+        for (int i = 0; i < locants.length; i++)
           this.addBranch(locants[i], new Atom("N", 3, #035606));
       }
 
       else if (endsWith(groupName, "ol")) {
-        for (int i=0; i<locants.length;i++)
+        for (int i = 0; i < locants.length; i++)
           this.addBranch(locants[i], new Atom("O", 2, #FF9900));
       }
 
       else if (endsWith(groupName, "one")) {
-        for (int i=0; i<locants.length;i++) {
+        for (int i = 0; i < locants.length; i++) {
           Atom carbonyl = new Atom("O", 2, #00FFFF);
           carbonyl.setNumBonds(2);
           this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
