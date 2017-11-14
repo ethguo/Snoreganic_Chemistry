@@ -30,7 +30,7 @@ class DropDownMenu {
     for (int i = 0; i < this.buttonPositions.length; i++) {
       fill(#ffffff);
       stroke(#1a1a1a);
-      strokeWeight(1);
+      strokeWeight(2);
       rect(this.buttonPositions[i].x + marginWidth, this.buttonPositions[i].y + marginHeight, this.rectWidth, this.rectHeight);
       
       commonNamesIUPACDisplayLines[i] = commonNamesIUPACDisplayLines[i].replace("\\n", "\n");
