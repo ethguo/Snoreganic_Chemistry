@@ -121,41 +121,41 @@ class Molecule {
             this.setNumBonds(locants[i], 3);
         }
 
-        else if (endsWith(groupName, "amine")) {
+        else if (endsWith(groupName, "amine") || endsWith(groupName, "amino")) {
           success = true;
           remainder = trimEnding(groupName, "amine");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("N", 3, #035606));
         }
 
-        else if (endsWith(groupName, "ol")) {
+        else if (endsWith(groupName, "ol") || endsWith(groupName, "hydroxyl")) {
           success = true;
           remainder = trimEnding(groupName, "ol");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("O", 2, #FF9900));
         }
 
-        else if (endsWith(groupName, "one")) {
+        else if (endsWith(groupName, "one") || endsWith(groupName, "oxo")) {
           success = true;
           remainder = trimEnding(groupName, "one");
           for (int i = 0; i < locants.length; i++) {
-            Atom carbonyl = new Atom("O", 2, #00FFFF);
+            Atom carbonyl = new Atom("O", 2, #0000FF);
             carbonyl.setNumBonds(2);
             this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
           }
         }
 
-        else if (endsWith(groupName, "al")) {
+        else if (endsWith(groupName, "al") || endsWith(groupName, "formyl")) {
           success = true;
           remainder = trimEnding(groupName, "al");
-          Atom carbonyl = new Atom("O", 2, #00FFFF);
+          Atom carbonyl = new Atom("O", 2, #0080FF);
           carbonyl.setNumBonds(2);
           this.addBranch(1, carbonyl);
 
-          // -dial
+          // -dial, diformyl
           if(endsWith(remainder, "di")) {
             remainder = trimEnding(remainder, "di");
-            Atom carbonyl2 = new Atom("O", 2, #00FFFF);
+            Atom carbonyl2 = new Atom("O", 2, #0080FF);
             carbonyl2.setNumBonds(2);
             this.addBranch(-1, carbonyl2);
           }
@@ -204,7 +204,7 @@ class Molecule {
               // In a case like "2-methylhexane", we still need to parse the "2-methyl" as a branch.
               String branchName = remainder.substring(0, remainder.length() - alkPrefix.length());
               if (!branchName.equals(""))
-                success = this.identifyBranch(locants, branchName);
+                success = this.identifyGroup(locants, branchName);
               break;
             }
           }
@@ -220,63 +220,55 @@ class Molecule {
 
   boolean identifyBranch(int[] locants, String branchName) {
     boolean success = false;
-    try {
-      //TODO: functional groups as branches
+    if (endsWith(branchName, "fluoro")) {
+      success = true;
+      for (int i = 0; i < locants.length; i++)
+        this.addBranch(locants[i], new Atom("F", 1, #66FF00));
+    }
+    else if (endsWith(branchName, "chloro")) {
+      success = true;
+      for (int i = 0; i < locants.length; i++)
+        this.addBranch(locants[i], new Atom("Cl", 1, #66FF00));
+    }
+    else if (endsWith(branchName, "bromo")) {
+      success = true;
+      for (int i = 0; i < locants.length; i++)
+        this.addBranch(locants[i], new Atom("Br", 1, #66FF00));
+    }
+    else if (endsWith(branchName, "iodo")) {
+      success = true;
+      for (int i = 0; i < locants.length; i++)
+        this.addBranch(locants[i], new Atom("I", 1, #66FF00));
+    }
 
-      if (endsWith(branchName, "fluoro")) {
-        success = true;
-        for (int i = 0; i < locants.length; i++)
-          this.addBranch(locants[i], new Atom("F", 1, #66FF00));
-      }
-      else if (endsWith(branchName, "chloro")) {
-        success = true;
-        for (int i = 0; i < locants.length; i++)
-          this.addBranch(locants[i], new Atom("Cl", 1, #66FF00));
-      }
-      else if (endsWith(branchName, "bromo")) {
-        success = true;
-        for (int i = 0; i < locants.length; i++)
-          this.addBranch(locants[i], new Atom("Br", 1, #66FF00));
-      }
-      else if (endsWith(branchName, "iodo")) {
-        success = true;
-        for (int i = 0; i < locants.length; i++)
-          this.addBranch(locants[i], new Atom("I", 1, #66FF00));
-      }
-
-      else if (endsWith(branchName, "yl")) {
-        // Alkyl branch, ex. "methyl"
-        String alkPrefix = trimEnding(branchName, "yl");
-        for (int i = 0; i < alkPrefixes.length; i++) {
-          if (endsWith(alkPrefix, alkPrefixes[i])) {
-            success = true;
-            for (int j = 0; j < locants.length; j++) {
-              Atom alkyl = makeCarbonChain(alkPrefixNums[i], #FF0000);
-              this.addBranch(locants[j], alkyl);
-            }
-            break;
+    else if (endsWith(branchName, "yl")) {
+      // Alkyl branch, ex. "methyl"
+      String alkPrefix = trimEnding(branchName, "yl");
+      for (int i = 0; i < alkPrefixes.length; i++) {
+        if (endsWith(alkPrefix, alkPrefixes[i])) {
+          success = true;
+          for (int j = 0; j < locants.length; j++) {
+            Atom alkyl = makeCarbonChain(alkPrefixNums[i], #FF0000);
+            this.addBranch(locants[j], alkyl);
           }
-        }
-      }
-      else if (endsWith(branchName, "oxy")) {
-        // Alkoxy branch, ex. "methoxy"
-        String alkPrefix = trimEnding(branchName, "oxy");
-        for (int i = 0; i < alkPrefixes.length; i++) {
-          if (endsWith(alkPrefix, alkPrefixes[i])) {
-            success = true;
-            for (int j = 0; j < locants.length; j++) {
-              Atom alkoxy = new Atom("O", 2, #9999FF);
-              alkoxy.addChild(makeCarbonChain(alkPrefixNums[i], #9999FF));
-              this.addBranch(locants[j], alkoxy);
-            }
-            break;
-          }
+          break;
         }
       }
     }
-    catch (RuntimeException e) {
-      println(e.getMessage());
-      return false;
+    else if (endsWith(branchName, "oxy")) {
+      // Alkoxy branch, ex. "methoxy"
+      String alkPrefix = trimEnding(branchName, "oxy");
+      for (int i = 0; i < alkPrefixes.length; i++) {
+        if (endsWith(alkPrefix, alkPrefixes[i])) {
+          success = true;
+          for (int j = 0; j < locants.length; j++) {
+            Atom alkoxy = new Atom("O", 2, #9999FF);
+            alkoxy.addChild(makeCarbonChain(alkPrefixNums[i], #9999FF));
+            this.addBranch(locants[j], alkoxy);
+          }
+          break;
+        }
+      }
     }
     return success;
   }

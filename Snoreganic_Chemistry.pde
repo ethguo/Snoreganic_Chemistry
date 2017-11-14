@@ -30,6 +30,9 @@ void draw() {
 }
 
 boolean createMolecule(String name) {
+  if (name.equals(""))
+    return false;
+
   Molecule m = new Molecule();
   boolean success;
 
