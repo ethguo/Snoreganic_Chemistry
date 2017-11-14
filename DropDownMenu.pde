@@ -27,6 +27,7 @@ class DropDownMenu {
   }
 
   void draw() {
+    background(#FFFFFF);
     for (int i = 0; i < this.buttonPositions.length; i++) {
       fill(#FFFFFF);
       stroke(#1A1A1A);
