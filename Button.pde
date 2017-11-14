@@ -13,7 +13,7 @@ class Button {
 
   void draw() {
     fill(this.colour);
-    stroke(#1a1a1a);
+    stroke(#1A1A1A);
 
     rect(this.position.x, this.position.y, this.size, this.size, this.radius);
   }

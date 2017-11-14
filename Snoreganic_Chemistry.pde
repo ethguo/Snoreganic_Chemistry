@@ -12,7 +12,7 @@ Molecule molecule;
 
 void setup() {
   size(960, 540);
-  background(#ffffff);
+  background(#FFFFFF);
   noLoop();
 
   strokeWeight(2);
@@ -24,9 +24,9 @@ void setup() {
   textField = new TextField();
 
   buttonMenu = new Button(height / 40, height / 40, #999999);
-  buttonEnter = new Button(width - height * 9 / 40, height / 40, #80ff80);
-  buttonSave = new Button(width - height * 3 / 20, height / 40, #ffff80);
-  buttonClear = new Button(width - height * 3 / 40, height / 40, #ff8080);
+  buttonEnter = new Button(width - height * 9 / 40, height / 40, #80FF80);
+  buttonSave = new Button(width - height * 3 / 20, height / 40, #FFFF80);
+  buttonClear = new Button(width - height * 3 / 40, height / 40, #FF8080);
 
   menu = new DropDownMenu();
 }
@@ -44,32 +44,33 @@ void draw() {
 void drawUI() {
   if (molecule == null) {
     if (menu.state == true) {
-      background(#ffffff);
+      background(#FFFFFF);
 
       menu.draw();
-    } else {
+    }
+    else {
       background(#666666);
 
-      fill(#ffffff);
+      fill(#FFFFFF);
       textSize(30);
       text("Welcome to Snore-ganic Chemistry™!", width / 2, height * 12 / 40);
 
-      fill(#99d6ff);
+      fill(#99D6FF);
       textSize(20);
       text("Designed to help SCH 4U students pass.", width / 2, height * 15 / 40);
 
-      fill(#ffffff);
+      fill(#FFFFFF);
       textSize(18);
       text("To get started, type in a valid IUPAC name in the text field above,", width / 2, height * 20 / 40);
       text("or choose an organic compound from our list by pressing the grey button.", width / 2, height * 22 / 40);
 
-      fill(#ffffff);
+      fill(#FFFFFF);
       textSize(18);
       text("Press the green button or hit ENTER to draw your IUPAC name.", width / 2, height * 27 / 40);
       text("Press the yellow button to save your line diagram as an image file.", width / 2, height * 29 / 40);
       text("Press the red button to clear and return to this welcome screen.", width / 2, height * 31 / 40);
 
-      fill(#ffffff);
+      fill(#FFFFFF);
       textSize(12);
       text("Copyright © 2017 Julia Baribeau, Fred Chun, Ethan Guo. All rights reserved.", width / 2, height * 36 / 40);
 
@@ -77,20 +78,21 @@ void drawUI() {
       line(height / 20, height * 5 / 40, height / 20, height * 22 / 40);
       line(width * 3 / 20, height * 22 / 40, height / 20, height * 22 / 40);
 
-      stroke(#80ff80);
+      stroke(#80FF80);
       line(width - height * 9 / 40 + height / 40, height * 5 / 40, width - height * 9 / 40 + height / 40, height * 27 / 40);
       line(width * 17 / 20, height * 27 / 40, width - height * 9 / 40 + height / 40, height * 27 / 40);
 
-      stroke(#ffff80);
+      stroke(#FFFF80);
       line(width - height * 3 / 20 + height / 40, height * 5 / 40, width - height * 3 / 20 + height / 40, height * 29 / 40);
       line(width * 17 / 20, height * 29 / 40, width - height * 3 / 20 + height / 40, height * 29 / 40);
 
-      stroke(#ff8080);
+      stroke(#FF8080);
       line(width - height * 3 / 40 + height / 40, height * 5 / 40, width - height * 3 / 40 + height / 40, height * 31 / 40);
       line(width * 17 / 20, height * 31 / 40, width - height * 3 / 40 + height / 40, height * 31 / 40);
     }
-  } else {
-    background(#ffffff);
+  }
+  else {
+    background(#FFFFFF);
   }
 
   fill(#333333);
@@ -154,19 +156,22 @@ void mousePressed() {
     molecule = null;
 
     menu.state = true;
-  } else if (buttonEnter.overButton() == true) {
+  }
+  else if (buttonEnter.overButton() == true) {
     buttonEnter.colour = #408040;
 
     if (textField.notEmpty()) {
       createMolecule();
     }
-  } else if (buttonSave.overButton() == true) {
+  }
+  else if (buttonSave.overButton() == true) {
     if (molecule != null) {
       buttonSave.colour = #808040;
 
       saveFrame("Screenshots/" + textField.getText() + ".png");
     }
-  } else if (buttonClear.overButton() == true) {
+  }
+  else if (buttonClear.overButton() == true) {
     buttonClear.colour = #804040;
 
     textField.clearText();
@@ -194,9 +199,9 @@ void mousePressed() {
 
 void mouseReleased() {
   buttonMenu.colour = #999999;
-  buttonEnter.colour = #80ff80;
-  buttonSave.colour = #ffff80;
-  buttonClear.colour = #ff8080;
+  buttonEnter.colour = #80FF80;
+  buttonSave.colour = #FFFF80;
+  buttonClear.colour = #FF8080;
 
   redraw();
 }
