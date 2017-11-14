@@ -48,8 +48,6 @@ class UI {
         textSize(12);
         text("Copyright © 2017 Julia Baribeau, Fred Chun, Ethan Guo. All rights reserved.", width / 2, height * 36 / 40);
 
-        strokeWeight(2);
-
         stroke(#999999);
         line(height / 20, height * 5 / 40, height / 20, height * 22 / 40);
         line(width * 3 / 20, height * 22 / 40, height / 20, height * 22 / 40);
@@ -69,8 +67,6 @@ class UI {
     } else {
       background(#ffffff);
     }
-
-    // strokeWeight(1);
 
     fill(#333333);
     noStroke();

@@ -98,6 +98,7 @@ class Atom {
         if (numHydrogens == 3)
           symbol += "\u2083";
       }
+      textSize(15);
       text(symbol, newCoords.x, newCoords.y);
     }
 

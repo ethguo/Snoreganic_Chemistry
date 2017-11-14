@@ -12,8 +12,10 @@ void setup() {
   background(#ffffff);
   noLoop();
 
+  strokeWeight(2);
+  
   textAlign(CENTER, CENTER);
-  PFont font = createFont("Arial Unicode", 20);
+  PFont font = createFont("Arial Unicode", 30);
   textFont(font);
 
   ui = new UI();
