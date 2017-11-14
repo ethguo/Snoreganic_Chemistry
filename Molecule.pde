@@ -98,11 +98,11 @@ class Molecule {
 
   boolean identifyGroup(int[] locants, String groupName) {
     // Returns true if successfully identified the branch, false otherwise.
-    boolean success = false; //TODO: catch if success is still false after the loop
+    boolean success = false;
     try {
-      boolean isBranch = this.identifyBranch(locants, groupName);
+      success = this.identifyBranch(locants, groupName);
 
-      if (!isBranch) {
+      if (success == false) {
         // If any functional groups match, remainder will contain the rest of the string
         // (minus the functional group suffix).
         String remainder = groupName;

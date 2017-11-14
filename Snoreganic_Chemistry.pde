@@ -37,14 +37,17 @@ boolean createMolecule(String name) {
 
   for (int i = 0; i < groups.length; i++) {
     success = m.parseGroup(groups[i]);
-    if (success == false)
+    if (success == false) {
+      print("Failed: ");
+      println(groups[i][0]);
       return false;
+    }
   }
 
   success = m.isValid();
   if (success)
     molecule = m;
-  
+
   return success;
 }
 
