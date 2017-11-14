@@ -2,6 +2,7 @@ class Atom {
   String element;
   int bondingNumber;
 
+  Atom parent;
   Atom[] children;
   int numChildren;
   int numBonds; // Single, double or triple
@@ -26,6 +27,7 @@ class Atom {
   }
 
   void addChild(Atom child) {
+    child.parent = this;
     children[numChildren] = child;
     numChildren++;
   }
@@ -60,9 +62,15 @@ class Atom {
 
     // Draws the single bond
     //TODO: need a bond1Start for if we're branching off of a N or O etc.
+    PVector bond1Start = direction.copy();
+    if (this.parent.element.equals("C"))
+      bond1Start.setMag(0);
+    else
+      bond1Start.setMag(textMargin);
     PVector bond1End = bondLine.copy();
+    bond1Start.add(fromCoords);
     bond1End.add(fromCoords);
-    line(fromCoords.x, fromCoords.y, bond1End.x, bond1End.y);
+    line(bond1Start.x, bond1Start.y, bond1End.x, bond1End.y);
 
     if (this.numBonds > 1) {
       // Draws the double bond
