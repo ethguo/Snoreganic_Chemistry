@@ -1,12 +1,13 @@
 class UI {
-  int cursor = 0;
-  String input = "";
+  TextField textField;
 
   Button grey, green, yellow, red;
 
   DropDownMenu ddm;
 
   UI() {
+    this.textField = new TextField();
+
     this.grey = new Button(height / 40, height / 40, #999999);
     this.green = new Button(width - height * 9 / 40, height / 40, #80ff80);
     this.yellow = new Button(width - height * 3 / 20, height / 40, #ffff80);
@@ -69,61 +70,26 @@ class UI {
       background(#ffffff);
     }
 
-    strokeWeight(1);
+    // strokeWeight(1);
 
     fill(#333333);
     noStroke();
 
     rect(0, 0, width, height * 2 / 20);
 
-    fill(#666666);
-    stroke(#1a1a1a);
-
-    rect(height / 10, height / 40, width - height * 7 / 20, height / 20, height / 40);
-
     this.grey.draw();
     this.green.draw();
     this.yellow.draw();
     this.red.draw();
 
-    String textWithCursor;
-
-    fill(#ffffff);
-    textSize(15);
-
-    if (cursor == this.input.length()) {
-      textWithCursor = this.input + " \u0332";
-    } else {
-      textWithCursor = this.insertChar('\u0332', this.cursor + 1);
-    }
-
-    text(textWithCursor, height / 10 + (width - height * 7 / 20) / 2, height / 20);
+    this.textField.draw();
   }
 
   void keyPressed() {
-    if (key == CODED) {
-      if (keyCode == LEFT && this.cursor > 0) {
-        this.cursor--;
-      } else if (keyCode == RIGHT && this.cursor < this.input.length()) {
-        this.cursor++;
-      } else if (keyCode == UP) {
-        this.cursor = 0;
-      } else if (keyCode == DOWN) {
-        this.cursor = this.input.length();
-      }
-    } else {
-      if (key == ENTER) {
-        createMolecule(this.input.toLowerCase());
-      } else if (key == BACKSPACE && this.cursor > 0) {
-        this.cursor--;
-        this.input = this.popChar(this.cursor);
-      } else if (key == DELETE && this.cursor < this.input.length()) {
-        this.input = this.popChar(this.cursor);
-      } else if (key > 31 && key < 127 && this.input.length() < 90) {
-        this.input = this.insertChar(key, this.cursor);
-        this.cursor++;
-      }
-    }
+    if (key == ENTER)
+      this.updateMolecule();
+    else
+      this.textField.keyPressed();
 
     redraw();
   }
@@ -138,20 +104,19 @@ class UI {
     } else if (this.green.overButton() == true) {
       this.green.colour = #408040;
 
-      if (this.input.length() > 0) {
-        createMolecule(this.input.toLowerCase());
+      if (this.textField.notEmpty()) {
+        this.updateMolecule();
       }
     } else if (this.yellow.overButton() == true) {
       if (molecule != null) {
         this.yellow.colour = #808040;
 
-        saveFrame("Screenshots/" + input + ".png");
+        saveFrame("Screenshots/" + this.textField.getText() + ".png");
       }
     } else if (this.red.overButton() == true) {
       this.red.colour = #804040;
 
-      this.cursor = 0;
-      this.input = "";
+      this.textField.clearText();
 
       molecule = null;
 
@@ -160,11 +125,13 @@ class UI {
 
     if (this.ddm.state == true) {
       for (int i = 0; i < this.ddm.buttonPositions.length; i++) {
-        if ((mouseX > this.ddm.buttonPositions[i].x && mouseX < this.ddm.buttonPositions[i].x + this.ddm.rectWidth) && (mouseY > this.ddm.buttonPositions[i].y && mouseY < this.ddm.buttonPositions[i].y + this.ddm.rectHeight)) {
-          this.input = this.ddm.commonNamesIUPACLines[i];
-          this.cursor = this.input.length();
+        if (mouseX > this.ddm.buttonPositions[i].x
+          && mouseX < this.ddm.buttonPositions[i].x + this.ddm.rectWidth
+          && mouseY > this.ddm.buttonPositions[i].y
+          && mouseY < this.ddm.buttonPositions[i].y + this.ddm.rectHeight) {
 
-          createMolecule(this.input.toLowerCase());
+          this.textField.setText(this.ddm.commonNamesIUPACLines[i]);
+          this.updateMolecule();
         }
       }
     }
@@ -181,17 +148,8 @@ class UI {
     redraw();
   }
 
-  String insertChar(char character, int index) {
-    String start = this.input.substring(0, index);
-    String end = this.input.substring(index);
-
-    return start + character + end;
-  }
-
-  String popChar(int index) {
-    String start = this.input.substring(0, index);
-    String end = this.input.substring(index + 1);
-
-    return start + end;
+  void updateMolecule() {
+    boolean success = createMolecule(this.textField.getText());
+    this.textField.setStatus(success);
   }
 }

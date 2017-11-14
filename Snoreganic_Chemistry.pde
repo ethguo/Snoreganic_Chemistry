@@ -29,8 +29,23 @@ void draw() {
   }
 }
 
-void createMolecule(String input) {
-  molecule = new Molecule(input); 
+boolean createMolecule(String name) {
+  Molecule m = new Molecule();
+  boolean success;
+
+  String[][] groups = matchAll(name, "(?:(\\d+(?:,\\d+)*)-)?(\\w+(?: acid)?)");
+
+  for (int i = 0; i < groups.length; i++) {
+    success = m.parseGroup(groups[i]);
+    if (success == false)
+      return false;
+  }
+
+  success = m.isValid();
+  if (success)
+    molecule = m;
+  
+  return success;
 }
 
 void keyPressed() {

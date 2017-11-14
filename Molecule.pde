@@ -11,8 +11,7 @@ class Molecule {
   ArrayList<Integer> tempBondLocants;
   ArrayList<Integer> tempNumBonds;
 
-  Molecule(String name) {
-    this.name = name;
+  Molecule() {
     this.baseChain = null;
 
     this.tempLocants = new ArrayList<Integer>();
@@ -20,15 +19,14 @@ class Molecule {
 
     this.tempBondLocants = new ArrayList<Integer>();
     this.tempNumBonds = new ArrayList<Integer>();
-
-    String[][] groups = matchAll(name, "(?:(\\d+(?:,\\d+)*)-)?(\\w+(?: acid)?)");
-    for (int i = 0; i < groups.length; i++) {
-      this.parseGroup(groups[i]);
-    }
   }
 
   void draw() {
     this.baseChain[0].drawRoot(this.numCarbons);
+  }
+
+  boolean isValid() {
+    return (this.baseChain != null);
   }
 
   void addBranch(int index, Atom branch) {
@@ -77,7 +75,7 @@ class Molecule {
     this.tempNumBonds = null;
   }
 
-  void parseGroup(String[] group) {
+  boolean parseGroup(String[] group) {
     String groupName = group[2];
 
     int[] locants;
@@ -87,16 +85,21 @@ class Molecule {
     else {
       String[] locantStrings = group[1].split(",");
       locants = new int[locantStrings.length];
-      for (int i = 0; i < locantStrings.length; i++)
+      for (int i = 0; i < locantStrings.length; i++) {
         locants[i] = parseInt(locantStrings[i]);
+        if (locants[i] == 0)
+          return false;
+      }
     }
-    identifyGroup(locants, groupName);
+
+    boolean success = identifyGroup(locants, groupName);
+    return success;
   }
 
   boolean identifyGroup(int[] locants, String groupName) {
     // Returns true if successfully identified the branch, false otherwise.
     boolean success = false; //TODO: catch if success is still false after the loop
-    // try {
+    try {
       boolean isBranch = this.identifyBranch(locants, groupName);
 
       if (!isBranch) {
@@ -105,30 +108,35 @@ class Molecule {
         String remainder = groupName;
 
         if (endsWith(groupName, "ene")) {
+          success = true;
           remainder = trimEnding(groupName, "ene");
           for (int i = 0; i < locants.length; i++)
             this.setNumBonds(locants[i], 2);
         }
 
         else if (endsWith(groupName, "yne")) {
+          success = true;
           remainder = trimEnding(groupName, "yne");
           for (int i = 0; i < locants.length; i++)
             this.setNumBonds(locants[i], 3);
         }
 
         else if (endsWith(groupName, "amine")) {
+          success = true;
           remainder = trimEnding(groupName, "amine");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("N", 3, #035606));
         }
 
         else if (endsWith(groupName, "ol")) {
+          success = true;
           remainder = trimEnding(groupName, "ol");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("O", 2, #FF9900));
         }
 
         else if (endsWith(groupName, "one")) {
+          success = true;
           remainder = trimEnding(groupName, "one");
           for (int i = 0; i < locants.length; i++) {
             Atom carbonyl = new Atom("O", 2, #00FFFF);
@@ -138,6 +146,7 @@ class Molecule {
         }
 
         else if (endsWith(groupName, "al")) {
+          success = true;
           remainder = trimEnding(groupName, "al");
           Atom carbonyl = new Atom("O", 2, #00FFFF);
           carbonyl.setNumBonds(2);
@@ -153,6 +162,7 @@ class Molecule {
         }
 
         else if (endsWith(groupName, "oic acid")) {
+          success = true;
           remainder = trimEnding(groupName, "oic acid");
           Atom carbonyl = new Atom("O", 2, #00FFFF);
           carbonyl.setNumBonds(2);
@@ -169,16 +179,17 @@ class Molecule {
           }
         }
 
+        // Trim off the optional cardinal prefix, ex. the "di" in "hexandiol"
         if (locants.length > 1) {
           String cardinalPrefix = cardinalPrefixes[locants.length - 2];
           if (endsWith(remainder, cardinalPrefix))
             remainder = trimEnding(remainder, cardinalPrefix);
         }
 
+        // "hexane" or "hexan" -> "hex"
         if (endsWith(remainder, "ane")) {
           remainder = trimEnding(remainder, "ane");
         }
-        // For ex. "1-ethanol" -> "ethan" -> "eth"
         if (endsWith(remainder, "an")) {
           remainder = trimEnding(remainder, "an");
         }
@@ -187,7 +198,7 @@ class Molecule {
           for (int i = 0; i < alkPrefixes.length; i++) {
             String alkPrefix = alkPrefixes[i];
             if (endsWith(remainder, alkPrefix)) {
-              // success = true;
+              success = true;
               this.setBaseChain(alkPrefixNums[i]);
 
               // In a case like "2-methylhexane", we still need to parse the "2-methyl" as a branch.
@@ -199,16 +210,19 @@ class Molecule {
           }
         }
       }
-    // }
-    // catch (RuntimeException e) {
-    //   println(e.getMessage());
-    // }
+    }
+    catch (RuntimeException e) {
+      println(e.getMessage());
+      return false;
+    }
     return success;
   }
 
   boolean identifyBranch(int[] locants, String branchName) {
     boolean success = false;
-    // try {
+    try {
+      //TODO: functional groups as branches
+
       if (endsWith(branchName, "fluoro")) {
         success = true;
         for (int i = 0; i < locants.length; i++)
@@ -259,18 +273,18 @@ class Molecule {
           }
         }
       }
-    // }
-    // catch (RuntimeException e) {
-    //   println(e.getMessage());
-    // }
-
+    }
+    catch (RuntimeException e) {
+      println(e.getMessage());
+      return false;
+    }
     return success;
   }
 }
 
 boolean endsWith(String s, String end) {
-  return (s.length() >= end.length() &&
-          s.substring(s.length() - end.length()).equals(end));
+  return (s.length() >= end.length()
+        && s.substring(s.length() - end.length()).equals(end));
 }
 
 String trimEnding(String s, String end) {
