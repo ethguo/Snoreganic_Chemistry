@@ -152,7 +152,7 @@ class Atom {
       this.children[2].draw(fromCoords, angle + PI);
       this.children[3].draw(fromCoords, angle - PI/2);
     }
-     else {
+    else {
       float sign;
       if (angle > 0)
         sign = -1;
