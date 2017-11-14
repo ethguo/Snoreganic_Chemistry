@@ -70,11 +70,11 @@ class TextField {
     this.cursor = 0;
   }
 
-  void setStatus(boolean success) {
-    if (success)
-      this.colour = #666666;
-    else
+  void setError(boolean error) {
+    if (error)
       this.colour = #B85858;
+    else
+      this.colour = #666666;
   }
 
   private String insertChar(char character, int index) {
