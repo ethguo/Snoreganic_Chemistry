@@ -61,7 +61,6 @@ class Atom {
       bondLine.setMag(this.bondLength - textMargin);
 
     // Draws the single bond
-    //TODO: need a bond1Start for if we're branching off of a N or O etc.
     PVector bond1Start = direction.copy();
     if (this.parent.element.equals("C"))
       bond1Start.setMag(0);
