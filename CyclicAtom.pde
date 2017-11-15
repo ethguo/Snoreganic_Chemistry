@@ -7,32 +7,28 @@ class CyclicAtom extends Atom {
   }
   void draw(PVector fromCoords, float angle) {
 
+    // On the "root" of the cyclic branch, draw an extra line to close off the polygon.
     if (!(this.parent instanceof CyclicAtom)) {
-      stroke(lineColor);
-      fill(lineColor);
       strokeWeight(2);
+      if (fullColour) {
+        stroke(lineColor);
+        fill(lineColor);
+      }
+      else {
+        stroke(defaultLineColor);
+        fill(defaultLineColor);
+      }
 
       PVector newCoords = PVector.fromAngle(angle);
       newCoords.setMag(this.bondLength);
       newCoords.add(fromCoords);
 
       float bondAngle = angle + PI/2 - PI / this.numCarbons;
-      PVector bond1Start = PVector.fromAngle(bondAngle);
-      PVector bond1End = bond1Start.copy();
+      PVector bondEnd = PVector.fromAngle(bondAngle);
+      bondEnd.setMag(this.bondLength);
+      bondEnd.add(newCoords);
 
-      if (this.parent.element.equals("C"))
-        bond1Start.setMag(0);
-      else
-        bond1Start.setMag(textMargin);
-
-      if (this.element.equals("C"))
-        bond1End.setMag(this.bondLength);
-      else
-        bond1End.setMag(this.bondLength - textMargin);
-
-      bond1Start.add(newCoords);
-      bond1End.add(newCoords);
-      line(bond1Start.x, bond1Start.y, bond1End.x, bond1End.y);
+      line(newCoords.x, newCoords.y, bondEnd.x, bondEnd.y);
     }
 
     super.draw(fromCoords, angle);

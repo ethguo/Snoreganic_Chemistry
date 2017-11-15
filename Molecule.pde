@@ -247,8 +247,14 @@ class Molecule {
       for (int i = 0; i < alkPrefixes.length; i++) {
         if (endsWith(alkPrefix, alkPrefixes[i])) {
           success = true;
+          String remainder = trimEnding(alkPrefix, alkPrefixes[i]);
+          boolean isCyclic = endsWith(remainder, "cyclo");
           for (int j = 0; j < locants.length; j++) {
-            Atom alkyl = makeCarbonChain(alkPrefixNums[i], #FF0000);
+            Atom alkyl;
+            if (isCyclic)
+              alkyl = makeCyclic(alkPrefixNums[i], #FF0000);
+            else
+              alkyl = makeCarbonChain(alkPrefixNums[i], #FF0000);
             this.addBranch(locants[j], alkyl);
           }
           break;
@@ -261,9 +267,16 @@ class Molecule {
       for (int i = 0; i < alkPrefixes.length; i++) {
         if (endsWith(alkPrefix, alkPrefixes[i])) {
           success = true;
+          String remainder = trimEnding(alkPrefix, alkPrefixes[i]);
+          boolean isCyclic = endsWith(remainder, "cyclo");
           for (int j = 0; j < locants.length; j++) {
             Atom alkoxy = new Atom("O", 2, #9999FF);
-            alkoxy.addChild(makeCarbonChain(alkPrefixNums[i], #9999FF));
+            Atom alkyl;
+            if (isCyclic)
+              alkyl = makeCyclic(alkPrefixNums[i], #9999FF);
+            else
+              alkyl = makeCarbonChain(alkPrefixNums[i], #9999FF);
+            alkoxy.addChild(alkyl);
             this.addBranch(locants[j], alkoxy);
           }
           break;

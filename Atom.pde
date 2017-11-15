@@ -37,16 +37,15 @@ class Atom {
   }
 
   void draw(PVector fromCoords, float angle) {
-    if(fullColour){
+    strokeWeight(2);
+    if (fullColour) {
       stroke(lineColor);
       fill(lineColor);
     }
-    else{
+    else {
       stroke(defaultLineColor);
       fill(defaultLineColor);
     }
-     
-    strokeWeight(2);
 
     if (this.numBonds == 3) { // If going into triple bond, cancel out the "bend"
       if (angle > 0)
