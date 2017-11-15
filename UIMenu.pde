@@ -53,4 +53,19 @@ class UIMenu {
       }
     }
   }
+
+  void mousePressed() {
+    if (this.state == true) {
+      for (int i = 0; i < this.buttonPositions.length; i++) {
+        if (mouseX > this.buttonPositions[i].x
+          && mouseX < this.buttonPositions[i].x + this.rectWidth
+          && mouseY > this.buttonPositions[i].y
+          && mouseY < this.buttonPositions[i].y + this.rectHeight) {
+
+          textField.setText(this.IUPACNamesLines[i]);
+          createMolecule();
+        }
+      }
+    }
+  }
 }
