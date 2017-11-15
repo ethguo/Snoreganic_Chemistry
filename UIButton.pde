@@ -1,10 +1,10 @@
-class Button {
+class UIButton {
   PVector position;
   int size;
   int radius;
   color colour;
 
-  Button(int x_, int y_, color colour_) {
+  UIButton(int x_, int y_, color colour_) {
     this.position = new PVector(x_, y_);
     this.size = height / 20;
     this.radius = this.size / 2;

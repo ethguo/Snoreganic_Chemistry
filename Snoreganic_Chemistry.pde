@@ -1,15 +1,15 @@
-// configurations for drawing the molecule
+// Global properties for drawing
 color defaultLineColor = #000000;
-boolean fullColour;
 int textMargin = 15;
 float bondOffset = 8;
 
-
-TextField textField;
-Button buttonMenu, buttonEnter, buttonSave, buttonClear, buttonColours;
-DropDownMenu menu;
-
 Molecule molecule;
+boolean fullColour;
+
+// UI components
+UITextField textField;
+UIButton buttonMenu, buttonEnter, buttonSave, buttonClear, buttonColours;
+UIMenu menu;
 
 void setup() {
   size(960, 540);
@@ -22,17 +22,17 @@ void setup() {
   PFont font = createFont("Arial Unicode", 30);
   textFont(font);
 
-  textField = new TextField();
+  textField = new UITextField();
 
-  buttonMenu = new Button(height / 40, height / 40, #999999);
-  buttonEnter = new Button(width - height * 9 / 40, height / 40, #80FF80);
-  buttonSave = new Button(width - height * 3 / 20, height / 40, #FFFF80);
-  buttonClear = new Button(width - height * 3 / 40, height / 40, #FF8080);
+  buttonMenu = new UIButton(height / 40, height / 40, #999999);
+  buttonEnter = new UIButton(width - height * 9 / 40, height / 40, #80FF80);
+  buttonSave = new UIButton(width - height * 3 / 20, height / 40, #FFFF80);
+  buttonClear = new UIButton(width - height * 3 / 40, height / 40, #FF8080);
   
-  buttonColours = new Button(height / 40, height - height * 3/40, #667fff);
+  buttonColours = new UIButton(height / 40, height - height * 3/40, #667fff);
   fullColour = true;
 
-  menu = new DropDownMenu();
+  menu = new UIMenu();
 }
 
 void draw() {

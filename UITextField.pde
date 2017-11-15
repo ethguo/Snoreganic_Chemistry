@@ -1,9 +1,9 @@
-class TextField {
+class UITextField {
   int cursor = 0;
   String string = "";
   color colour;
 
-  TextField() {
+  UITextField() {
     this.colour = #666666;
   }
 

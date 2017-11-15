@@ -1,4 +1,4 @@
-class DropDownMenu {
+class UIMenu {
   boolean state;
   PVector[] buttonPositions;
   String[] commonNamesLines = loadStrings("data/commonNames.txt");
@@ -9,7 +9,7 @@ class DropDownMenu {
   int rectWidth = width / 5;
   int rectHeight = (height * 9 / 10) * 8 / 30;
 
-  DropDownMenu() {
+  UIMenu() {
     this.state = false;
     this.buttonPositions = new PVector[12];
 
