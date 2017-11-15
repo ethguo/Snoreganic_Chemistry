@@ -1,5 +1,8 @@
+// These arrays store the IUPAC prefixes and their corresponding number of carbons.
+// They are both necessary because "meth" is longer than but contains "eth", so we had to put it in this order for it to recognize "meth"s vs "eth"s.
 String[] alkPrefixes = {"eicos","nonadec","octadec","heptadec","hexadec","pentadec","tetradec","tridec","dodec","undec","dec","non","oct","hept","hex","pent","but","prop","meth","eth"};
 int[] alkPrefixNums = {20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,1,2};
+// This array stores the cardinal prefixes (indicating how many of a branch there are, in ascending order.
 String[] cardinalPrefixes = {"di","tri","tetra","penta","hexa","hepta","octa","nona","deca","undeca","dodeca","trideca","tetradeca","pentadeca","hexadeca","heptadeca","octadeca","nonadeca","eicosa"};
 
 class Molecule {
@@ -14,9 +17,9 @@ class Molecule {
   Molecule() {
     this.baseChain = null;
 
+    // These ArrayLists store branches before the baseChain is created
     this.tempLocants = new ArrayList<Integer>();
     this.tempBranches = new ArrayList<Atom>();
-
     this.tempBondLocants = new ArrayList<Integer>();
     this.tempNumBonds = new ArrayList<Integer>();
   }
@@ -26,6 +29,7 @@ class Molecule {
   }
 
   boolean isValid() {
+    println(this.baseChain != null);
     return (this.baseChain != null);
   }
 
@@ -52,14 +56,23 @@ class Molecule {
     }
   }
 
-  void setBaseChain(int numCarbons) {
+  void setBaseChain(int numCarbons, boolean isCyclic) {
     this.numCarbons = numCarbons;
-    this.baseChain = new Atom[numCarbons];
-    this.baseChain[numCarbons-1] = new Atom();
-
-    for (int i = numCarbons-2; i >= 0; i--) {
-      this.baseChain[i] = new Atom();
-      this.baseChain[i].addChild(this.baseChain[i+1]);
+    if (isCyclic) {
+      this.baseChain = new Atom[numCarbons+1];
+      this.baseChain[numCarbons] = new CyclicAtom(numCarbons);
+      for (int i = numCarbons-1; i >= 0; i--) {
+        this.baseChain[i] = new CyclicAtom(numCarbons);
+        this.baseChain[i].addChild(this.baseChain[i+1]);
+      }
+    }
+    else {
+      this.baseChain = new Atom[numCarbons];
+      this.baseChain[numCarbons-1] = new Atom();
+      for (int i = numCarbons-2; i >= 0; i--) {
+        this.baseChain[i] = new Atom();
+        this.baseChain[i].addChild(this.baseChain[i+1]);
+      }
     }
 
     // Add all the branches from the temp ArrayLists
@@ -97,6 +110,8 @@ class Molecule {
   }
 
   boolean identifyGroup(int[] locants, String groupName) {
+    // In general, this function works from the end of the groupName, right-to-left, by checking the last few characters (using endsWith)
+    // and then chopping off those characters (using trimEnding), and checking the new last few characters again, etc.
     // Returns true if successfully identified the branch, false otherwise.
     boolean success = false;
     try {
@@ -195,16 +210,22 @@ class Molecule {
         }
 
         if (remainder != null) {
+          // This group might contain the prefix identifying the base chain
           for (int i = 0; i < alkPrefixes.length; i++) {
             String alkPrefix = alkPrefixes[i];
             if (endsWith(remainder, alkPrefix)) {
               success = true;
-              this.setBaseChain(alkPrefixNums[i]);
+              remainder = trimEnding(remainder, alkPrefix);
+              boolean isCyclic = endsWith(remainder, "cyclo");
+              this.setBaseChain(alkPrefixNums[i], isCyclic);
+
+              if (isCyclic) {
+                remainder = trimEnding(remainder, "cyclo");
+              }
 
               // In a case like "2-methylhexane", we still need to parse the "2-methyl" as a branch.
-              String branchName = remainder.substring(0, remainder.length() - alkPrefix.length());
-              if (!branchName.equals(""))
-                success = this.identifyGroup(locants, branchName);
+              if (!remainder.equals(""))
+                success = this.identifyGroup(locants, remainder);
               break;
             }
           }
@@ -285,38 +306,41 @@ class Molecule {
     }
     return success;
   }
-}
 
-boolean endsWith(String s, String end) {
-  return (s.length() >= end.length()
-        && s.substring(s.length() - end.length()).equals(end));
-}
-
-String trimEnding(String s, String end) {
-  return s.substring(0, s.length() - end.length());
-}
-
-Atom makeCarbonChain(int numCarbons) {
-  return makeCarbonChain(numCarbons, defaultLineColor);
-}
-
-Atom makeCarbonChain(int numCarbons, color lineColor) {
-  Atom chain = new Atom(lineColor);
-  if (numCarbons > 1)
-    chain.addChild(makeCarbonChain(numCarbons-1, lineColor));
-  return chain;
-}
-
-CyclicAtom makeCyclic(int numCarbons) {
-  return makeCyclic(numCarbons, defaultLineColor);
-}
-
-CyclicAtom makeCyclic(int numCarbons, color lineColor) {
-  CyclicAtom chain = new CyclicAtom(numCarbons, lineColor);
-  for (int i = 1; i < numCarbons; i++) {
-    CyclicAtom newChain = new CyclicAtom(numCarbons, lineColor);
-    newChain.addChild(chain);
-    chain = newChain;
+  private boolean endsWith(String s, String end) {
+    // Returns true if the last few characters matches the given end string.
+    return (s.length() >= end.length()
+          && s.substring(s.length() - end.length()).equals(end));
   }
-  return chain;
+
+  private String trimEnding(String s, String end) {
+    // Returns the string with the given end string "chopped off".
+    return s.substring(0, s.length() - end.length());
+  }
+
+  private Atom makeCarbonChain(int numCarbons) {
+    return makeCarbonChain(numCarbons, defaultLineColor);
+  }
+
+  private Atom makeCarbonChain(int numCarbons, color lineColor) {
+    Atom chain = new Atom(lineColor);
+    if (numCarbons > 1)
+      chain.addChild(makeCarbonChain(numCarbons-1, lineColor));
+    return chain;
+  }
+
+  private CyclicAtom makeCyclic(int numCarbons) {
+    return makeCyclic(numCarbons, defaultLineColor);
+  }
+
+  private CyclicAtom makeCyclic(int numCarbons, color lineColor) {
+    CyclicAtom chain = new CyclicAtom(numCarbons, lineColor);
+    for (int i = 0; i < numCarbons; i++) {
+      // This makes a chain with one extra carbon - the last one is only used to draw the extra bond to close off the polygon.
+      CyclicAtom newChain = new CyclicAtom(numCarbons, lineColor);
+      newChain.addChild(chain);
+      chain = newChain;
+    }
+    return chain;
+  }
 }

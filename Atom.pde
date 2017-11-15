@@ -66,37 +66,39 @@ class Atom {
       bondLine.setMag(this.bondLength - textMargin);
 
     // Draws the single bond
-    PVector bond1Start = direction.copy();
-    if (this.parent.element.equals("C"))
-      bond1Start.setMag(0);
-    else
-      bond1Start.setMag(textMargin);
-    PVector bond1End = bondLine.copy();
-    bond1Start.add(fromCoords);
-    bond1End.add(fromCoords);
-    line(bond1Start.x, bond1Start.y, bond1End.x, bond1End.y);
+    if (this.parent != null) {
+      PVector bond1Start = direction.copy();
+      if (this.parent.element.equals("C"))
+        bond1Start.setMag(0);
+      else
+        bond1Start.setMag(textMargin);
+      PVector bond1End = bondLine.copy();
+      bond1Start.add(fromCoords);
+      bond1End.add(fromCoords);
+      line(bond1Start.x, bond1Start.y, bond1End.x, bond1End.y);
 
-    if (this.numBonds > 1) {
-      // Draws the double bond
-      PVector bond2Start = direction.copy();
-      bond2Start.rotate(PI/2);
-      bond2Start.setMag(bondOffset);
-      PVector bond2End = bond2Start.copy();
-      bond2End.add(bondLine);
-      bond2Start.add(fromCoords);
-      bond2End.add(fromCoords);
-      line(bond2Start.x, bond2Start.y, bond2End.x, bond2End.y);
+      if (this.numBonds > 1) {
+        // Draws the double bond
+        PVector bond2Start = direction.copy();
+        bond2Start.rotate(PI/2);
+        bond2Start.setMag(bondOffset);
+        PVector bond2End = bond2Start.copy();
+        bond2End.add(bondLine);
+        bond2Start.add(fromCoords);
+        bond2End.add(fromCoords);
+        line(bond2Start.x, bond2Start.y, bond2End.x, bond2End.y);
 
-      if (this.numBonds > 2) {
-        // Draws the triple bond
-        PVector bond3Start = direction.copy();
-        bond3Start.rotate(-PI/2);
-        bond3Start.setMag(bondOffset);
-        PVector bond3End = bond3Start.copy();
-        bond3End.add(bondLine);
-        bond3Start.add(fromCoords);
-        bond3End.add(fromCoords);
-        line(bond3Start.x, bond3Start.y, bond3End.x, bond3End.y);
+        if (this.numBonds > 2) {
+          // Draws the triple bond
+          PVector bond3Start = direction.copy();
+          bond3Start.rotate(-PI/2);
+          bond3Start.setMag(bondOffset);
+          PVector bond3End = bond3Start.copy();
+          bond3End.add(bondLine);
+          bond3Start.add(fromCoords);
+          bond3End.add(fromCoords);
+          line(bond3Start.x, bond3Start.y, bond3End.x, bond3End.y);
+        }
       }
     }
 
