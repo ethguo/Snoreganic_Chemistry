@@ -270,12 +270,12 @@ class Molecule {
           String remainder = trimEnding(alkPrefix, alkPrefixes[i]);
           boolean isCyclic = endsWith(remainder, "cyclo");
           for (int j = 0; j < locants.length; j++) {
-            Atom alkoxy = new Atom("O", 2, #9999FF);
+            Atom alkoxy = new Atom("O", 2, #9933FF);
             Atom alkyl;
             if (isCyclic)
-              alkyl = makeCyclic(alkPrefixNums[i], #9999FF);
+              alkyl = makeCyclic(alkPrefixNums[i], #9933FF);
             else
-              alkyl = makeCarbonChain(alkPrefixNums[i], #9999FF);
+              alkyl = makeCarbonChain(alkPrefixNums[i], #9933FF);
             alkoxy.addChild(alkyl);
             this.addBranch(locants[j], alkoxy);
           }
