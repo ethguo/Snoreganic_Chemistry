@@ -1,11 +1,12 @@
 // configurations for drawing the molecule
 color defaultLineColor = #000000;
+boolean fullColour;
 int textMargin = 15;
 float bondOffset = 8;
 
 
 TextField textField;
-Button buttonMenu, buttonEnter, buttonSave, buttonClear;
+Button buttonMenu, buttonEnter, buttonSave, buttonClear, buttonColours;
 DropDownMenu menu;
 
 Molecule molecule;
@@ -27,6 +28,9 @@ void setup() {
   buttonEnter = new Button(width - height * 9 / 40, height / 40, #80FF80);
   buttonSave = new Button(width - height * 3 / 20, height / 40, #FFFF80);
   buttonClear = new Button(width - height * 3 / 40, height / 40, #FF8080);
+  
+  buttonColours = new Button(height / 40, height - height * 3/40, #667fff);
+  fullColour = true;
 
   menu = new DropDownMenu();
 }
@@ -40,9 +44,9 @@ void draw() {
   }
   else {
     menu.state = false;
-
     background(#FFFFFF);
     molecule.draw();
+    
   }
 
 
@@ -54,6 +58,14 @@ void draw() {
   buttonEnter.draw();
   buttonSave.draw();
   buttonClear.draw();
+  
+  if(molecule != null){
+    buttonColours.draw();
+    
+    fill(#666666);
+    textSize(12);
+    text("Toggle colour", height * 7/40, height - height * 2/40);
+  }
 
   textField.draw();
 }
@@ -144,7 +156,19 @@ void mousePressed() {
 
     menu.state = false;
   }
-
+  
+  else if (buttonColours.overButton() == true) {
+    if (fullColour == false){
+      fullColour = true;
+      buttonColours.colour = #667fff;
+    }
+      
+    else{
+      fullColour = false;
+      buttonColours.colour = #111111;
+    }
+  }
+    
   if (menu.state == true) {
     for (int i = 0; i < menu.buttonPositions.length; i++) {
       if (mouseX > menu.buttonPositions[i].x
