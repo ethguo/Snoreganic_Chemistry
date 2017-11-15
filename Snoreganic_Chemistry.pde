@@ -81,7 +81,7 @@ void drawLandingPage() {
   text("Press the red button to clear and return to this welcome screen.", width / 2, height * 31 / 40);
 
   fill(#FFFFFF);
-  textSize(12);
+  textSize(10);
   text("Copyright © 2017 Julia Baribeau, Fred Chun, Ethan Guo. All rights reserved.", width / 2, height * 36 / 40);
 
   stroke(#999999);
@@ -114,9 +114,12 @@ void mousePressed() {
   if (buttonMenu.overButton() == true) {
     buttonMenu.colour = #4C4C4C;
 
-    molecule = null;
-
-    menu.state = true;
+    if (menu.state == true)
+      menu.state = false;
+    else{
+      molecule = null;
+      menu.state = true;
+    }
   }
   else if (buttonEnter.overButton() == true) {
     buttonEnter.colour = #408040;
