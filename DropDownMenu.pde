@@ -37,8 +37,21 @@ class DropDownMenu {
 
       fill(#666666);
       textSize(15);
-      text("(" + commonNamesIUPACDisplayLines[i] + ")", this.buttonPositions[i].x + marginWidth + this.rectWidth / 2, this.buttonPositions[i].y + marginHeight + this.rectHeight * 2 / 4);
-      text(commonNamesLines[i], this.buttonPositions[i].x + marginWidth + this.rectWidth / 2, this.buttonPositions[i].y + marginHeight + this.rectHeight / 4);
+
+      String commonName = commonNamesLines[i];
+      if (commonName.equals(" ")) {
+        float xIUPACName = this.buttonPositions[i].x + marginWidth + this.rectWidth / 2;
+        float yIUPACName = this.buttonPositions[i].y + marginHeight + this.rectHeight * 2 / 4;
+        text(commonNamesIUPACDisplayLines[i], xIUPACName, yIUPACName);
+      }
+      else {
+        float xCommonName = this.buttonPositions[i].x + marginWidth + this.rectWidth / 2;
+        float yCommonName = this.buttonPositions[i].y + marginHeight + this.rectHeight / 4;
+        text(commonName, xCommonName, yCommonName);
+        float xIUPACName = this.buttonPositions[i].x + marginWidth + this.rectWidth / 2;
+        float yIUPACName = this.buttonPositions[i].y + marginHeight + this.rectHeight * 2 / 3;
+        text("(" + commonNamesIUPACDisplayLines[i] + ")", xIUPACName, yIUPACName);
+      }
     }
   }
 }
