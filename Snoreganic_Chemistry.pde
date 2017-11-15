@@ -3,6 +3,7 @@ color defaultLineColor = #000000;
 int textMargin = 15;
 float bondOffset = 8;
 
+// global variables
 Molecule molecule;
 boolean fullColour;
 
@@ -22,6 +23,7 @@ void setup() {
   PFont font = createFont("Arial Unicode", 30);
   textFont(font);
 
+  // initialize UI elements
   textField = new UITextField();
 
   buttonMenu = new UIButton(height / 40, height / 40, #999999);
@@ -36,20 +38,20 @@ void setup() {
 }
 
 void draw() {
-  if (molecule == null) {
+  if (molecule == null) { // if line diagram is not drawn on screen
     if (menu.state == true)
-      menu.draw();
+      menu.draw(); // display menu of example organic compounds if grey button is clicked
     else
-      drawLandingPage();
+      drawLandingPage(); // else display welcome screen
   }
   else {
-    menu.state = false;
+    menu.state = false; // set menu state to false, meaning grey button not clicked
     background(#FFFFFF);
-    molecule.draw();
+    molecule.draw(); // draw line diagram
     
   }
 
-
+  // display UI elements on screen
   fill(#333333);
   noStroke();
   rect(0, 0, width, height * 2 / 20);
@@ -60,7 +62,7 @@ void draw() {
   buttonClear.draw();
   
   if(molecule != null){
-    buttonColours.draw();
+    buttonColours.draw(); // special button for toggling colours to and from black lines
     
     fill(#666666);
     textSize(12);
@@ -70,6 +72,7 @@ void draw() {
   textField.draw();
 }
 
+// display welcome screen
 void drawLandingPage() {
   background(#666666);
 
@@ -113,15 +116,17 @@ void drawLandingPage() {
   line(width * 17 / 20, height * 31 / 40, width - height * 3 / 40 + height / 40, height * 31 / 40);
 }
 
+// keyboard detection for user input for IUPAC names
 void keyPressed() {
   if (key == ENTER)
-    createMolecule();
+    createMolecule(); // draw line diagram if ENTER is pressed
   else
     textField.keyPressed();
 
   redraw();
 }
 
+// mouse pressed detection for menu items and buttons
 void mousePressed() {
   if (buttonMenu.overButton() == true) {
     buttonMenu.colour = #4C4C4C;
@@ -130,21 +135,21 @@ void mousePressed() {
       menu.state = false;
     else{
       molecule = null;
-      menu.state = true;
+      menu.state = true; // open menu for grey button
     }
   }
   else if (buttonEnter.overButton() == true) {
     buttonEnter.colour = #408040;
 
     if (textField.notEmpty()) {
-      createMolecule();
+      createMolecule(); // draw line diagram for green button
     }
   }
   else if (buttonSave.overButton() == true) {
     if (molecule != null) {
       buttonSave.colour = #808040;
 
-      saveFrame("Screenshots/" + textField.getText() + ".png");
+      saveFrame("Screenshots/" + textField.getText() + ".png"); // take screenshot for yellow button
     }
   }
   else if (buttonClear.overButton() == true) {
@@ -154,9 +159,10 @@ void mousePressed() {
 
     molecule = null;
 
-    menu.state = false;
+    menu.state = false; // clear screen and return to intro screen for red button
   }
   
+  // toggle between black lines and coloured lines for diagrams when buttonColours is pressed
   else if (buttonColours.overButton() == true) {
     if (fullColour == false){
       fullColour = true;
@@ -168,7 +174,8 @@ void mousePressed() {
       buttonColours.colour = #111111;
     }
   }
-    
+  
+  // mouse pressed detection for all menu items
   if (menu.state == true) {
     for (int i = 0; i < menu.buttonPositions.length; i++) {
       if (mouseX > menu.buttonPositions[i].x
@@ -185,6 +192,7 @@ void mousePressed() {
   redraw();
 }
 
+// 3d button effect with colour change
 void mouseReleased() {
   buttonMenu.colour = #999999;
   buttonEnter.colour = #80FF80;
@@ -197,15 +205,16 @@ void mouseReleased() {
 void createMolecule() {
   String name = textField.getText();
   if (name.equals("")) {
-    textField.setError(true);
+    textField.setError(true); // invalid IUPAC name when text field is blank
     return;
   }
 
   Molecule m = new Molecule();
   boolean success;
 
-  String[][] groups = matchAll(name, "(?:(\\d+(?:,\\d+)*)-)?(\\w+(?: acid)?)");
+  String[][] groups = matchAll(name, "(?:(\\d+(?:,\\d+)*)-)?(\\w+(?: acid)?)"); // IUPAC name parsing with regex
 
+  // check if name for user input is valid
   for (int i = 0; i < groups.length; i++) {
     success = m.parseGroup(groups[i]);
     if (success == false) {
@@ -219,11 +228,11 @@ void createMolecule() {
   success = m.isValid();
   if (success) {
     textField.setError(false);
-    molecule = m;
+    molecule = m; // draw line diagram if user input is valid
 
     //molecule.addBranch(2, makeCyclic(5, #900000));
   }
   else {
-    textField.setError(true);
+    textField.setError(true); // display error when user input is invalid
   }
 }
