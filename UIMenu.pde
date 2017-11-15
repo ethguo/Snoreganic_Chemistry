@@ -14,9 +14,9 @@ class UIMenu {
     this.buttonPositions = new PVector[12];
 
     int index = 0;
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 3; j++) {
-        this.buttonPositions[index] = new PVector(i * width / 4, j * (height * 9 / 10) / 3 + (height / 10));
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 4; j++) {
+        this.buttonPositions[index] = new PVector(j * width / 4, i * (height * 9 / 10) / 3 + (height / 10));
         index++;
       }
     }
