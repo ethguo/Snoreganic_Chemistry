@@ -176,7 +176,7 @@ void mousePressed() {
         && mouseY > menu.buttonPositions[i].y
         && mouseY < menu.buttonPositions[i].y + menu.rectHeight) {
 
-        textField.setText(menu.commonNamesIUPACLines[i]);
+        textField.setText(menu.IUPACNamesLines[i]);
         createMolecule();
       }
     }

@@ -2,8 +2,8 @@ class UIMenu {
   boolean state;
   PVector[] buttonPositions;
   String[] commonNamesLines = loadStrings("data/commonNames.txt");
-  String[] commonNamesIUPACLines = loadStrings("data/commonNamesIUPAC.txt");
-  String[] commonNamesIUPACDisplayLines = loadStrings("data/commonNamesIUPACDisplay.txt");
+  String[] IUPACNamesLines = loadStrings("data/IUPACNames.txt");
+  String[] IUPACNamesDisplayLines = loadStrings("data/IUPACNamesDisplay.txt");
   int marginWidth = width / 40;
   int marginHeight = (height * 9 / 10) / 30;
   int rectWidth = width / 5;
@@ -32,7 +32,7 @@ class UIMenu {
       float y = this.buttonPositions[i].y + marginHeight;
       rect(x, y, this.rectWidth, this.rectHeight);
       
-      commonNamesIUPACDisplayLines[i] = commonNamesIUPACDisplayLines[i].replace("\\n", "\n");
+      IUPACNamesDisplayLines[i] = IUPACNamesDisplayLines[i].replace("\\n", "\n");
 
       fill(#666666);
       textSize(15);
@@ -41,7 +41,7 @@ class UIMenu {
       if (commonName.equals(" ")) {
         float xIUPACName = x + this.rectWidth / 2;
         float yIUPACName = y + this.rectHeight * 2 / 4;
-        text(commonNamesIUPACDisplayLines[i], xIUPACName, yIUPACName);
+        text(IUPACNamesDisplayLines[i], xIUPACName, yIUPACName);
       }
       else {
         float xCommonName = x + this.rectWidth / 2;
@@ -49,7 +49,7 @@ class UIMenu {
         text(commonName, xCommonName, yCommonName);
         float xIUPACName = x + this.rectWidth / 2;
         float yIUPACName = y + this.rectHeight * 2 / 3;
-        text("(" + commonNamesIUPACDisplayLines[i] + ")", xIUPACName, yIUPACName);
+        text("(" + IUPACNamesDisplayLines[i] + ")", xIUPACName, yIUPACName);
       }
     }
   }
