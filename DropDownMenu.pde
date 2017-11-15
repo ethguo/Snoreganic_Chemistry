@@ -13,15 +13,11 @@ class DropDownMenu {
     this.state = false;
     this.buttonPositions = new PVector[12];
 
-    int c = 0;
-
-    while (c < this.buttonPositions.length) {      
-      for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 3; j++) {
-          this.buttonPositions[c] = new PVector(i * width / 4, j * (height * 9 / 10) / 3 + (height / 10));
-
-          c++;
-        }
+    int index = 0;
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 3; j++) {
+        this.buttonPositions[index] = new PVector(i * width / 4, j * (height * 9 / 10) / 3 + (height / 10));
+        index++;
       }
     }
   }
@@ -31,7 +27,10 @@ class DropDownMenu {
     for (int i = 0; i < this.buttonPositions.length; i++) {
       fill(#FFFFFF);
       stroke(#1A1A1A);
-      rect(this.buttonPositions[i].x + marginWidth, this.buttonPositions[i].y + marginHeight, this.rectWidth, this.rectHeight);
+
+      float x = this.buttonPositions[i].x + marginWidth;
+      float y = this.buttonPositions[i].y + marginHeight;
+      rect(x, y, this.rectWidth, this.rectHeight);
       
       commonNamesIUPACDisplayLines[i] = commonNamesIUPACDisplayLines[i].replace("\\n", "\n");
 
@@ -40,16 +39,16 @@ class DropDownMenu {
 
       String commonName = commonNamesLines[i];
       if (commonName.equals(" ")) {
-        float xIUPACName = this.buttonPositions[i].x + marginWidth + this.rectWidth / 2;
-        float yIUPACName = this.buttonPositions[i].y + marginHeight + this.rectHeight * 2 / 4;
+        float xIUPACName = x + this.rectWidth / 2;
+        float yIUPACName = y + this.rectHeight * 2 / 4;
         text(commonNamesIUPACDisplayLines[i], xIUPACName, yIUPACName);
       }
       else {
-        float xCommonName = this.buttonPositions[i].x + marginWidth + this.rectWidth / 2;
-        float yCommonName = this.buttonPositions[i].y + marginHeight + this.rectHeight / 4;
+        float xCommonName = x + this.rectWidth / 2;
+        float yCommonName = y + this.rectHeight / 3;
         text(commonName, xCommonName, yCommonName);
-        float xIUPACName = this.buttonPositions[i].x + marginWidth + this.rectWidth / 2;
-        float yIUPACName = this.buttonPositions[i].y + marginHeight + this.rectHeight * 2 / 3;
+        float xIUPACName = x + this.rectWidth / 2;
+        float yIUPACName = y + this.rectHeight * 2 / 3;
         text("(" + commonNamesIUPACDisplayLines[i] + ")", xIUPACName, yIUPACName);
       }
     }
