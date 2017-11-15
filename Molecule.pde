@@ -1,7 +1,6 @@
 String[] alkPrefixes = {"eicos","nonadec","octadec","heptadec","hexadec","pentadec","tetradec","tridec","dodec","undec","dec","non","oct","hept","hex","pent","but","prop","meth","eth"};
 int[] alkPrefixNums = {20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,1,2};
 String[] cardinalPrefixes = {"di","tri","tetra","penta","hexa","hepta","octa","nona","deca","undeca","dodeca","trideca","tetradeca","pentadeca","hexadeca","heptadeca","octadeca","nonadeca","eicosa"};
-color col = defaultLineColor;
 
 class Molecule {
   String name;
@@ -125,25 +124,22 @@ class Molecule {
         else if (endsWith(groupName, "amine") || endsWith(groupName, "amino")) {
           success = true;
           remainder = trimEnding(groupName, "amine");
-          if(fullColour) col = #035606;
           for (int i = 0; i < locants.length; i++)
-            this.addBranch(locants[i], new Atom("N", 3, col));
+            this.addBranch(locants[i], new Atom("N", 3, #035606));
         }
 
         else if (endsWith(groupName, "ol") || endsWith(groupName, "hydroxyl")) {
           success = true;
           remainder = trimEnding(groupName, "ol");
-          if(fullColour) col = #FF9900;
           for (int i = 0; i < locants.length; i++)
-            this.addBranch(locants[i], new Atom("O", 2, col));
+            this.addBranch(locants[i], new Atom("O", 2, #FF9900));
         }
 
         else if (endsWith(groupName, "one") || endsWith(groupName, "oxo")) {
           success = true;
           remainder = trimEnding(groupName, "one");
-          if(fullColour) col = #0000FF;
           for (int i = 0; i < locants.length; i++) {
-            Atom carbonyl = new Atom("O", 2, col);
+            Atom carbonyl = new Atom("O", 2, #0000FF);
             carbonyl.setNumBonds(2);
             this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
           }
@@ -152,15 +148,14 @@ class Molecule {
         else if (endsWith(groupName, "al") || endsWith(groupName, "formyl")) {
           success = true;
           remainder = trimEnding(groupName, "al");
-          if(fullColour) col = #0080FF;
-          Atom carbonyl = new Atom("O", 2, col);
+          Atom carbonyl = new Atom("O", 2, #0080FF);
           carbonyl.setNumBonds(2);
           this.addBranch(1, carbonyl);
 
           // -dial, diformyl
           if(endsWith(remainder, "di")) {
             remainder = trimEnding(remainder, "di");
-            Atom carbonyl2 = new Atom("O", 2, col);
+            Atom carbonyl2 = new Atom("O", 2, #0080FF);
             carbonyl2.setNumBonds(2);
             this.addBranch(-1, carbonyl2);
           }
@@ -169,19 +164,18 @@ class Molecule {
         else if (endsWith(groupName, "oic acid")) {
           success = true;
           remainder = trimEnding(groupName, "oic acid");
-          if(fullColour) col = #00FFFF;
-          Atom carbonyl = new Atom("O", 2, col);
+          Atom carbonyl = new Atom("O", 2, #00FFFF);
           carbonyl.setNumBonds(2);
           this.addBranch(1, carbonyl);
-          this.addBranch(1, new Atom("O", 2, col));
+          this.addBranch(1, new Atom("O", 2, #00FFFF));
 
           // -dioic acid
           if(endsWith(remainder, "di")) {
             remainder = trimEnding(remainder, "di");
-            Atom carbonyl2 = new Atom("O", 2, col);
+            Atom carbonyl2 = new Atom("O", 2, #00FFFF);
             carbonyl2.setNumBonds(2);
             this.addBranch(-1, carbonyl2);
-            this.addBranch(-1, new Atom("O", 2, col));
+            this.addBranch(-1, new Atom("O", 2, #00FFFF));
           }
         }
 
@@ -228,38 +222,33 @@ class Molecule {
     boolean success = false;
     if (endsWith(branchName, "fluoro")) {
       success = true;
-      if(fullColour) col = #66FF00;
       for (int i = 0; i < locants.length; i++)
-        this.addBranch(locants[i], new Atom("F", 1, col));
+        this.addBranch(locants[i], new Atom("F", 1, #66FF00));
     }
     else if (endsWith(branchName, "chloro")) {
       success = true;
-      if(fullColour) col = #66FF00;
       for (int i = 0; i < locants.length; i++)
-        this.addBranch(locants[i], new Atom("Cl", 1, col));
+        this.addBranch(locants[i], new Atom("Cl", 1, #66FF00));
     }
     else if (endsWith(branchName, "bromo")) {
       success = true;
-      if(fullColour) col = #66FF00;
       for (int i = 0; i < locants.length; i++)
-        this.addBranch(locants[i], new Atom("Br", 1, col));
+        this.addBranch(locants[i], new Atom("Br", 1, #66FF00));
     }
     else if (endsWith(branchName, "iodo")) {
       success = true;
-      if(fullColour) col = #66FF00;
       for (int i = 0; i < locants.length; i++)
-        this.addBranch(locants[i], new Atom("I", 1, col));
+        this.addBranch(locants[i], new Atom("I", 1, #66FF00));
     }
 
     else if (endsWith(branchName, "yl")) {
       // Alkyl branch, ex. "methyl"
-      if(fullColour) col = #FF0000;
       String alkPrefix = trimEnding(branchName, "yl");
       for (int i = 0; i < alkPrefixes.length; i++) {
         if (endsWith(alkPrefix, alkPrefixes[i])) {
           success = true;
           for (int j = 0; j < locants.length; j++) {
-            Atom alkyl = makeCarbonChain(alkPrefixNums[i], col);
+            Atom alkyl = makeCarbonChain(alkPrefixNums[i], #FF0000);
             this.addBranch(locants[j], alkyl);
           }
           break;
@@ -268,14 +257,13 @@ class Molecule {
     }
     else if (endsWith(branchName, "oxy")) {
       // Alkoxy branch, ex. "methoxy"
-      if(fullColour) col = #9999FF;
       String alkPrefix = trimEnding(branchName, "oxy");
       for (int i = 0; i < alkPrefixes.length; i++) {
         if (endsWith(alkPrefix, alkPrefixes[i])) {
           success = true;
           for (int j = 0; j < locants.length; j++) {
-            Atom alkoxy = new Atom("O", 2, col);
-            alkoxy.addChild(makeCarbonChain(alkPrefixNums[i], col));
+            Atom alkoxy = new Atom("O", 2, #9999FF);
+            alkoxy.addChild(makeCarbonChain(alkPrefixNums[i], #9999FF));
             this.addBranch(locants[j], alkoxy);
           }
           break;
