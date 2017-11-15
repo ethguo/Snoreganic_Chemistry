@@ -1,12 +1,12 @@
-2-methyl-1,3-butdiene
-7-methyloct-3,5-diene-1-yne-1,3,4,5,6-pentaol
-2-bromo-2-chloro-3-fluoro-5-cyclobutyl-6-hydroxylheptanoic acid
+2-methyl-but-1,3-diene
+6-cyclopropyl-7-ethyl-3,3,5-trimethyl non-1,5-diene
+2,4,5,6-tetrafluoro-5,7-dicyclopropyl-1,2-heptanol
 propanone
-3-methoxy-4-propoxy-5-hydroxyl-6-ethoxyhex-2-one
-4,4,7,7-tetrabromo-8-fluorooct-2,5-diyne
+7-methyloct-3,5-diene-1-yne-1,3,4,5,6-pentaol
+5-cyclobutyl-4,4,5,5-tetrabromo-2-pentyne
 ethanoic acid
-2,2,6-tribromo-3-chloro-3-ethyl-5-fluoroheptanedial
-4-hydroxyl-3-oxopentanoic acid
+2-oxo-3-hydroxyl-4-methoxy-6-propoxy hexanoic acid
+4-bromo-5-cyclopentoxy-2,3,6-triiodooct-2,4,6-triene
 2,4-diamino-4-oxobutanoic acid
-2-ethyl-3-methylheptan-6-yne-1,4,4-triol
-2-bromo-3,4,5-trichlorohex-2,4-diene
+2,2,6-tribromo-3-chloro-3-ethyl-5,6-heptanamine-dial
+5-cyclododecoxyhexadecanedioic acid
