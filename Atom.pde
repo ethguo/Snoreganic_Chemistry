@@ -54,7 +54,6 @@ class Atom {
     newCoords.add(fromCoords);
 
     PVector bondLine = direction.copy();
-    bondLine.setMag(this.bondLength);
     if (this.element.equals("C"))
       bondLine.setMag(this.bondLength);
     else

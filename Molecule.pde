@@ -283,13 +283,27 @@ String trimEnding(String s, String end) {
   return s.substring(0, s.length() - end.length());
 }
 
-Atom makeCarbonChain(int n) {
-  return makeCarbonChain(n, defaultLineColor);
+Atom makeCarbonChain(int numCarbons) {
+  return makeCarbonChain(numCarbons, defaultLineColor);
 }
 
-Atom makeCarbonChain(int n, color lineColor) {
+Atom makeCarbonChain(int numCarbons, color lineColor) {
   Atom chain = new Atom(lineColor);
-  if (n > 1)
-    chain.addChild(makeCarbonChain(n-1, lineColor));
+  if (numCarbons > 1)
+    chain.addChild(makeCarbonChain(numCarbons-1, lineColor));
+  return chain;
+}
+
+CyclicAtom makeCyclic(int numCarbons) {
+  return makeCyclic(numCarbons, defaultLineColor);
+}
+
+CyclicAtom makeCyclic(int numCarbons, color lineColor) {
+  CyclicAtom chain = new CyclicAtom(numCarbons, lineColor);
+  for (int i = 1; i < numCarbons; i++) {
+    CyclicAtom newChain = new CyclicAtom(numCarbons, lineColor);
+    newChain.addChild(chain);
+    chain = newChain;
+  }
   return chain;
 }
