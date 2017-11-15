@@ -54,7 +54,6 @@ class Atom {
     newCoords.add(fromCoords);
 
     PVector bondLine = direction.copy();
-    bondLine.setMag(this.bondLength);
     if (this.element.equals("C"))
       bondLine.setMag(this.bondLength);
     else
@@ -152,7 +151,7 @@ class Atom {
       this.children[2].draw(fromCoords, angle + PI);
       this.children[3].draw(fromCoords, angle - PI/2);
     }
-     else {
+    else {
       float sign;
       if (angle > 0)
         sign = -1;
