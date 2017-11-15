@@ -197,7 +197,7 @@ void createMolecule() {
     textField.setError(false);
     molecule = m;
 
-    molecule.addBranch(2, makeCyclic(5, #900000));
+    //molecule.addBranch(2, makeCyclic(5, #900000));
   }
   else {
     textField.setError(true);
