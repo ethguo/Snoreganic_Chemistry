@@ -1,6 +1,8 @@
-//prefixes and corresponding numerical values
+// These arrays store the IUPAC prefixes and their corresponding number of carbons.
+// They are both necessary because "meth" is longer than but contains "eth", so we had to put it in this order for it to recognize "meth"s vs "eth"s.
 String[] alkPrefixes = {"eicos","nonadec","octadec","heptadec","hexadec","pentadec","tetradec","tridec","dodec","undec","dec","non","oct","hept","hex","pent","but","prop","meth","eth"};
 int[] alkPrefixNums = {20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,1,2};
+// This array stores the cardinal prefixes (indicating how many of a branch there are, in ascending order.
 String[] cardinalPrefixes = {"di","tri","tetra","penta","hexa","hepta","octa","nona","deca","undeca","dodeca","trideca","tetradeca","pentadeca","hexadeca","heptadeca","octadeca","nonadeca","eicosa"};
 
 class Molecule {
@@ -12,53 +14,54 @@ class Molecule {
   ArrayList<Integer> tempBondLocants;
   ArrayList<Integer> tempNumBonds;
 
-  //constructor
   Molecule() {
     this.baseChain = null;
 
-    //"temp-" arrayLists are used when the baseChain has not yet been initialized
+    // "temp" ArrayLists are used when the baseChain has not yet been initialized
     this.tempLocants = new ArrayList<Integer>();
     this.tempBranches = new ArrayList<Atom>();
-
     this.tempBondLocants = new ArrayList<Integer>();
     this.tempNumBonds = new ArrayList<Integer>();
   }
 
-  //draws molecule in centre of screen
+  // Calls drawRoot on the first Atom in the base chain (which will recursively draw every other Atom as well)
   void draw() {
     this.baseChain[0].drawRoot(this.numCarbons);
   }
 
+  // Checks if the molecule was successfully created (if the baseChain was ever initialized)
   boolean isValid() {
     return (this.baseChain != null);
   }
 
-  //immediately adds a branch if baseChain has been initialized, or stores info to be added later
   void addBranch(int index, Atom branch) {
+    // If the basechain has not yet been initalized, store the information in the "temp" ArrayLists
     if (this.baseChain == null) {
       this.tempLocants.add(index);
       this.tempBranches.add(branch);
     }
+    // Otherwise, just add the branch to the appropriate Atom in the base chain
     else {
-      if (index == -1)
+      if (index == -1) // An index of -1 means the last carbon in the chain
         this.baseChain[this.numCarbons-1].addChild(branch);
       else
         this.baseChain[index-1].addChild(branch);
     }
   }
 
-  //immediately add double or triple bond if baseChain exists; else store for later
   void setNumBonds(int index, int numBonds) {
+    // If the basechain has not yet been initalized, store the information in the "temp" ArrayLists
     if (this.baseChain == null) {
       this.tempBondLocants.add(index);
       this.tempNumBonds.add(numBonds);
     }
+    // Otherwise, set the appropriate Atom in the base chain to a double or triple bond
     else {
       this.baseChain[index].setNumBonds(numBonds);
     }
   }
 
-  //initializes the base chain
+  // Initializes the base chain
   void setBaseChain(int numCarbons) {
     this.numCarbons = numCarbons;
     this.baseChain = new Atom[numCarbons];
@@ -104,8 +107,10 @@ class Molecule {
     return success;
   }
 
-  // Returns true if successfully identified the branch, false otherwise.
   boolean identifyGroup(int[] locants, String groupName) {
+    // In general, this function works from the end of the groupName, right-to-left, by checking the last few characters (using endsWith)
+    // and then chopping off those characters (using trimEnding), and checking the new last few characters again, etc.
+    // Returns true if successfully identified the branch, false otherwise.
     boolean success = false;
     try {
       success = this.identifyBranch(locants, groupName);
@@ -116,45 +121,51 @@ class Molecule {
         String remainder = groupName;
 
         //identifies main functional group
-        if (endsWith(groupName, "ene")) { //alkene
+        // Alkene
+        if (endsWith(groupName, "ene")) {
           success = true;
           remainder = trimEnding(groupName, "ene");
           for (int i = 0; i < locants.length; i++)
             this.setNumBonds(locants[i], 2);
         }
 
-        else if (endsWith(groupName, "yne")) { //alkyne
+        // Alkyne
+        else if (endsWith(groupName, "yne")) {
           success = true;
           remainder = trimEnding(groupName, "yne");
           for (int i = 0; i < locants.length; i++)
             this.setNumBonds(locants[i], 3);
         }
 
-        else if (endsWith(groupName, "amine") || endsWith(groupName, "amino")) { // Amine
+        // Amine
+        else if (endsWith(groupName, "amine") || endsWith(groupName, "amino")) {
           success = true;
           remainder = trimEnding(groupName, "amine");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("N", 3, #035606));
         }
 
-        else if (endsWith(groupName, "ol") || endsWith(groupName, "hydroxyl")) { // Alcohol
+        // Alcohol
+        else if (endsWith(groupName, "ol") || endsWith(groupName, "hydroxyl")) {
           success = true;
           remainder = trimEnding(groupName, "ol");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("O", 2, #FF9900));
         }
 
-        else if (endsWith(groupName, "one") || endsWith(groupName, "oxo")) { // Ketone
+        // Ketone
+        else if (endsWith(groupName, "one") || endsWith(groupName, "oxo")) {
           success = true;
           remainder = trimEnding(groupName, "one");
           for (int i = 0; i < locants.length; i++) {
             Atom carbonyl = new Atom("O", 2, #0000FF);
             carbonyl.setNumBonds(2);
-            this.addBranch(locants[i], carbonyl); //is it possible to replace "carbonyl" with "new Atom("O", 2, #00FFFF)setNumBonds(2)"
+            this.addBranch(locants[i], carbonyl);
           }
         }
 
-        else if (endsWith(groupName, "al") || endsWith(groupName, "formyl")) { // Aldehyde
+        // Aldehyde
+        else if (endsWith(groupName, "al") || endsWith(groupName, "formyl")) {
           success = true;
           remainder = trimEnding(groupName, "al");
           Atom carbonyl = new Atom("O", 2, #0080FF);
@@ -162,7 +173,7 @@ class Molecule {
           this.addBranch(1, carbonyl);
 
           // -dial, diformyl
-          if(endsWith(remainder, "di")) { // Di-aldehyde
+          if(endsWith(remainder, "di")) {
             remainder = trimEnding(remainder, "di");
             Atom carbonyl2 = new Atom("O", 2, #0080FF);
             carbonyl2.setNumBonds(2);
@@ -170,7 +181,8 @@ class Molecule {
           }
         }
 
-        else if (endsWith(groupName, "oic acid")) { // Carboxylic acid
+        // Carboxylic acid
+        else if (endsWith(groupName, "oic acid")) {
           success = true;
           remainder = trimEnding(groupName, "oic acid");
           Atom carbonyl = new Atom("O", 2, #00FFFF);
@@ -179,7 +191,7 @@ class Molecule {
           this.addBranch(1, new Atom("O", 2, #00FFFF));
 
           // -dioic acid
-          if(endsWith(remainder, "di")) { // Di-carboxylic acid
+          if(endsWith(remainder, "di")) {
             remainder = trimEnding(remainder, "di");
             Atom carbonyl2 = new Atom("O", 2, #00FFFF);
             carbonyl2.setNumBonds(2);
@@ -204,6 +216,7 @@ class Molecule {
         }
 
         if (remainder != null) {
+          // This group might contain the prefix identifying the base chain
           for (int i = 0; i < alkPrefixes.length; i++) {
             String alkPrefix = alkPrefixes[i];
             if (endsWith(remainder, alkPrefix)) {
@@ -229,6 +242,8 @@ class Molecule {
 
   boolean identifyBranch(int[] locants, String branchName) {
     boolean success = false;
+
+    // Alkyl halide branches (Halogens)
     if (endsWith(branchName, "fluoro")) {
       success = true;
       for (int i = 0; i < locants.length; i++)
@@ -250,8 +265,8 @@ class Molecule {
         this.addBranch(locants[i], new Atom("I", 1, #66FF00));
     }
 
+    // Alkyl branch, ex. "methyl"
     else if (endsWith(branchName, "yl")) {
-      // Alkyl branch, ex. "methyl"
       String alkPrefix = trimEnding(branchName, "yl");
       for (int i = 0; i < alkPrefixes.length; i++) {
         if (endsWith(alkPrefix, alkPrefixes[i])) {
@@ -270,8 +285,9 @@ class Molecule {
         }
       }
     }
+
+    // Alkoxy branch, ex. "methoxy"
     else if (endsWith(branchName, "oxy")) {
-      // Alkoxy branch, ex. "methoxy"
       String alkPrefix = trimEnding(branchName, "oxy");
       for (int i = 0; i < alkPrefixes.length; i++) {
         if (endsWith(alkPrefix, alkPrefixes[i])) {
@@ -296,19 +312,23 @@ class Molecule {
   }
 }
 
+// Returns true if the last few characters matches the given end string
 boolean endsWith(String s, String end) {
   return (s.length() >= end.length()
         && s.substring(s.length() - end.length()).equals(end));
 }
 
+// Returns the string with the given end string "chopped off"
 String trimEnding(String s, String end) {
   return s.substring(0, s.length() - end.length());
 }
 
+// Call the method below, with the default color
 Atom makeCarbonChain(int numCarbons) {
   return makeCarbonChain(numCarbons, defaultLineColor);
 }
 
+// Returns an n-carbon chain
 Atom makeCarbonChain(int numCarbons, color lineColor) {
   Atom chain = new Atom(lineColor);
   if (numCarbons > 1)
@@ -316,10 +336,12 @@ Atom makeCarbonChain(int numCarbons, color lineColor) {
   return chain;
 }
 
+// Call the method below, with the default color
 CyclicAtom makeCyclic(int numCarbons) {
   return makeCyclic(numCarbons, defaultLineColor);
 }
 
+// Returns an n-carbon cyclic chain
 CyclicAtom makeCyclic(int numCarbons, color lineColor) {
   CyclicAtom chain = new CyclicAtom(numCarbons, lineColor);
   for (int i = 1; i < numCarbons; i++) {
