@@ -3,6 +3,7 @@ color defaultLineColor = #000000;
 int textMargin = 15;
 float bondOffset = 8;
 
+// global variables
 Molecule molecule;
 boolean fullColour;
 
@@ -23,6 +24,7 @@ void setup() {
   PFont font = createFont("Arial Unicode", 30);
   textFont(font);
 
+  // initialize UI elements
   textField = new UITextField();
 
   buttonMenu = new UIButton(height / 40, height / 40, #999999);
@@ -37,17 +39,16 @@ void setup() {
 }
 
 void draw() {
-  if (molecule == null) {
+  if (molecule == null) { // If there is no molecule currently displayed
     if (menu.state == true)
-      menu.draw();
+      menu.draw(); // display menu of example organic compounds if grey button is clicked
     else
-      drawLandingPage();
+      drawLandingPage(); // else display welcome screen
   }
   else {
-    menu.state = false;
+    menu.state = false; // hide menu
     background(#FFFFFF);
-    molecule.draw();
-
+    molecule.draw(); // draw line diagram
   }
 
   // Dark gray background for the header section
@@ -61,7 +62,7 @@ void draw() {
   buttonClear.draw();
 
   if (molecule != null) {
-    buttonColours.draw();
+    buttonColours.draw(); // special button for toggling colours to and from black lines
 
     fill(#666666);
     textSize(15);
@@ -71,6 +72,7 @@ void draw() {
   textField.draw();
 }
 
+// display welcome screen
 void drawLandingPage() {
   background(#666666);
 
@@ -116,9 +118,10 @@ void drawLandingPage() {
   line(width * 17 / 20, height * 31 / 40, width - height * 3 / 40 + height / 40, height * 31 / 40);
 }
 
+// keyboard detection for user input for IUPAC names
 void keyPressed() {
   if (key == ENTER)
-    createMolecule();
+    createMolecule(); // draw line diagram if ENTER is pressed
   else
     // Let the textField handle any other key
     textField.keyPressed();
@@ -126,8 +129,10 @@ void keyPressed() {
   redraw();
 }
 
+// mouse pressed detection for menu items and buttons
 void mousePressed() {
   if (buttonMenu.overButton() == true) {
+    // If the grey button was clicked, toggle the menu
     buttonMenu.colour = #4C4C4C;
 
     if (menu.state == true)
@@ -138,12 +143,14 @@ void mousePressed() {
     }
   }
   else if (buttonEnter.overButton() == true) {
+    // If the green button was clicked, draw the molecule
     buttonEnter.colour = #408040;
 
     if (textField.notEmpty())
       createMolecule();
   }
   else if (buttonSave.overButton() == true) {
+    // If the yellow button was clicked, take a screenshot
     if (molecule != null) {
       buttonSave.colour = #808040;
 
@@ -151,14 +158,15 @@ void mousePressed() {
     }
   }
   else if (buttonClear.overButton() == true) {
+    // If the red button was clicked, clear the screen
     buttonClear.colour = #804040;
 
     molecule = null;
     textField.clearText();
     menu.state = false;
   }
-
   else if (buttonColours.overButton() == true) {
+    // If the toggle button was clicked, toggle between black lines and coloured lines
     if (fullColour)
       buttonColours.colour = #111111;
     else
@@ -172,6 +180,7 @@ void mousePressed() {
   redraw();
 }
 
+// 3d button effect with colour change
 void mouseReleased() {
   buttonMenu.colour = #999999;
   buttonEnter.colour = #80FF80;
@@ -208,6 +217,7 @@ void createMolecule() {
 
   // Check if the molecule as a whole is valid
   success = m.isValid();
+  // Indicate on the text field whether the name was successfully parsed
   textField.setError(!success);
 
   // Only assign this molecule to the "global" molecule variable if everything was successful

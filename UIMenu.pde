@@ -14,6 +14,7 @@ class UIMenu {
     this.buttonPositions = new PVector[12];
 
     int index = 0;
+    // define menu item positions on the screen, horizontally and vertically
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 4; j++) {
         this.buttonPositions[index] = new PVector(j * width / 4, i * (height * 9 / 10) / 3 + (height / 10));
@@ -22,6 +23,7 @@ class UIMenu {
     }
   }
 
+  // draw menu and menu items
   void draw() {
     background(#FFFFFF);
     for (int i = 0; i < this.buttonPositions.length; i++) {
@@ -30,9 +32,9 @@ class UIMenu {
 
       float x = this.buttonPositions[i].x + marginWidth;
       float y = this.buttonPositions[i].y + marginHeight;
-      rect(x, y, this.rectWidth, this.rectHeight);
+      rect(x, y, this.rectWidth, this.rectHeight); // draw menu item as a rectangle
       
-      IUPACNamesDisplayLines[i] = IUPACNamesDisplayLines[i].replace("\\n", "\n");
+      IUPACNamesDisplayLines[i] = IUPACNamesDisplayLines[i].replace("\\n", "\n"); // used to nicely display long IUPAC names in the menu item rectangles
 
       fill(#666666);
       textSize(15);
@@ -41,15 +43,15 @@ class UIMenu {
       if (commonName.equals(" ")) {
         float xIUPACName = x + this.rectWidth / 2;
         float yIUPACName = y + this.rectHeight * 2 / 4;
-        text(IUPACNamesDisplayLines[i], xIUPACName, yIUPACName);
+        text(IUPACNamesDisplayLines[i], xIUPACName, yIUPACName); // display IUPAC name in menu item
       }
       else {
         float xCommonName = x + this.rectWidth / 2;
         float yCommonName = y + this.rectHeight / 3;
-        text(commonName, xCommonName, yCommonName);
+        text(commonName, xCommonName, yCommonName); // display common name in menu item (if one exists)
         float xIUPACName = x + this.rectWidth / 2;
         float yIUPACName = y + this.rectHeight * 2 / 3;
-        text("(" + IUPACNamesDisplayLines[i] + ")", xIUPACName, yIUPACName);
+        text("(" + IUPACNamesDisplayLines[i] + ")", xIUPACName, yIUPACName); // display IUPAC name in menu item
       }
     }
   }

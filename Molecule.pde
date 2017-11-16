@@ -1,3 +1,4 @@
+//prefixes and corresponding numerical values
 String[] alkPrefixes = {"eicos","nonadec","octadec","heptadec","hexadec","pentadec","tetradec","tridec","dodec","undec","dec","non","oct","hept","hex","pent","but","prop","meth","eth"};
 int[] alkPrefixNums = {20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,1,2};
 String[] cardinalPrefixes = {"di","tri","tetra","penta","hexa","hepta","octa","nona","deca","undeca","dodeca","trideca","tetradeca","pentadeca","hexadeca","heptadeca","octadeca","nonadeca","eicosa"};
@@ -11,9 +12,11 @@ class Molecule {
   ArrayList<Integer> tempBondLocants;
   ArrayList<Integer> tempNumBonds;
 
+  //constructor
   Molecule() {
     this.baseChain = null;
 
+    //"temp-" arrayLists are used when the baseChain has not yet been initialized
     this.tempLocants = new ArrayList<Integer>();
     this.tempBranches = new ArrayList<Atom>();
 
@@ -21,6 +24,7 @@ class Molecule {
     this.tempNumBonds = new ArrayList<Integer>();
   }
 
+  //draws molecule in centre of screen
   void draw() {
     this.baseChain[0].drawRoot(this.numCarbons);
   }
@@ -29,6 +33,7 @@ class Molecule {
     return (this.baseChain != null);
   }
 
+  //immediately adds a branch if baseChain has been initialized, or stores info to be added later
   void addBranch(int index, Atom branch) {
     if (this.baseChain == null) {
       this.tempLocants.add(index);
@@ -42,6 +47,7 @@ class Molecule {
     }
   }
 
+  //immediately add double or triple bond if baseChain exists; else store for later
   void setNumBonds(int index, int numBonds) {
     if (this.baseChain == null) {
       this.tempBondLocants.add(index);
@@ -52,6 +58,7 @@ class Molecule {
     }
   }
 
+  //initializes the base chain
   void setBaseChain(int numCarbons) {
     this.numCarbons = numCarbons;
     this.baseChain = new Atom[numCarbons];
@@ -75,11 +82,12 @@ class Molecule {
     this.tempNumBonds = null;
   }
 
+  //parses the locant+groupName groups matched by regex above; returns if successful or not
   boolean parseGroup(String[] group) {
     String groupName = group[2];
 
     int[] locants;
-    if (group[1] == null) {
+    if (group[1] == null) { //eg. octanol (no locant, assumed to be 1)
       locants = new int[] {1};
     }
     else {
@@ -96,8 +104,8 @@ class Molecule {
     return success;
   }
 
+  // Returns true if successfully identified the branch, false otherwise.
   boolean identifyGroup(int[] locants, String groupName) {
-    // Returns true if successfully identified the branch, false otherwise.
     boolean success = false;
     try {
       success = this.identifyBranch(locants, groupName);
@@ -107,35 +115,36 @@ class Molecule {
         // (minus the functional group suffix).
         String remainder = groupName;
 
-        if (endsWith(groupName, "ene")) {
+        //identifies main functional group
+        if (endsWith(groupName, "ene")) { //alkene
           success = true;
           remainder = trimEnding(groupName, "ene");
           for (int i = 0; i < locants.length; i++)
             this.setNumBonds(locants[i], 2);
         }
 
-        else if (endsWith(groupName, "yne")) {
+        else if (endsWith(groupName, "yne")) { //alkyne
           success = true;
           remainder = trimEnding(groupName, "yne");
           for (int i = 0; i < locants.length; i++)
             this.setNumBonds(locants[i], 3);
         }
 
-        else if (endsWith(groupName, "amine") || endsWith(groupName, "amino")) {
+        else if (endsWith(groupName, "amine") || endsWith(groupName, "amino")) { // Amine
           success = true;
           remainder = trimEnding(groupName, "amine");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("N", 3, #035606));
         }
 
-        else if (endsWith(groupName, "ol") || endsWith(groupName, "hydroxyl")) {
+        else if (endsWith(groupName, "ol") || endsWith(groupName, "hydroxyl")) { // Alcohol
           success = true;
           remainder = trimEnding(groupName, "ol");
           for (int i = 0; i < locants.length; i++)
             this.addBranch(locants[i], new Atom("O", 2, #FF9900));
         }
 
-        else if (endsWith(groupName, "one") || endsWith(groupName, "oxo")) {
+        else if (endsWith(groupName, "one") || endsWith(groupName, "oxo")) { // Ketone
           success = true;
           remainder = trimEnding(groupName, "one");
           for (int i = 0; i < locants.length; i++) {
@@ -145,7 +154,7 @@ class Molecule {
           }
         }
 
-        else if (endsWith(groupName, "al") || endsWith(groupName, "formyl")) {
+        else if (endsWith(groupName, "al") || endsWith(groupName, "formyl")) { // Aldehyde
           success = true;
           remainder = trimEnding(groupName, "al");
           Atom carbonyl = new Atom("O", 2, #0080FF);
@@ -153,7 +162,7 @@ class Molecule {
           this.addBranch(1, carbonyl);
 
           // -dial, diformyl
-          if(endsWith(remainder, "di")) {
+          if(endsWith(remainder, "di")) { // Di-aldehyde
             remainder = trimEnding(remainder, "di");
             Atom carbonyl2 = new Atom("O", 2, #0080FF);
             carbonyl2.setNumBonds(2);
@@ -161,7 +170,7 @@ class Molecule {
           }
         }
 
-        else if (endsWith(groupName, "oic acid")) {
+        else if (endsWith(groupName, "oic acid")) { // Carboxylic acid
           success = true;
           remainder = trimEnding(groupName, "oic acid");
           Atom carbonyl = new Atom("O", 2, #00FFFF);
@@ -170,7 +179,7 @@ class Molecule {
           this.addBranch(1, new Atom("O", 2, #00FFFF));
 
           // -dioic acid
-          if(endsWith(remainder, "di")) {
+          if(endsWith(remainder, "di")) { // Di-carboxylic acid
             remainder = trimEnding(remainder, "di");
             Atom carbonyl2 = new Atom("O", 2, #00FFFF);
             carbonyl2.setNumBonds(2);
