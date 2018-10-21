@@ -1,5 +1,15 @@
 # Snore-ganic Chemistry (Grade 12 CS team project)
 
+<img alt="Welcome Screen" src="https://github.com/ethguo/Snoreganic_Chemistry/blob/master/doc/img/welcome.png">
+
+<img alt="2,4-diamino-4-oxobutanoic_acid" src="https://github.com/ethguo/Snoreganic_Chemistry/blob/master/doc/img/2,4-diamino-4-oxobutanoic_acid.png" width="50%" align="right">
+
+<img alt="2,2,6-tribromo-3-chloro-3-ethyl-5,6-heptanamine-dial" src="https://github.com/ethguo/Snoreganic_Chemistry/blob/master/doc/img/2,2,6-tribromo-3-chloro-3-ethyl-5,6-heptanamine-dial.png" width="50%" align="right">
+
+<img alt="6-butyl-4-cyclopropyl-3,3-dimethyl-9-chlorodec-1,5-diene-7-yne" src="https://github.com/ethguo/Snoreganic_Chemistry/blob/master/doc/img/6-butyl-4-cyclopropyl-3,3-dimethyl-9-chlorodec-1,5-diene-7-yne.png" width="50%" align="right">
+
+<img alt="4-bromo-5-cyclopentoxy-2,3,6-triiodooct-2,4,6-triene" src="https://github.com/ethguo/Snoreganic_Chemistry/blob/master/doc/img/4-bromo-5-cyclopentoxy-2,3,6-triiodooct-2,4,6-triene.png" width="50%" align="right">
+
 ## Project Description
 
 Snoreganic Chemistry™ is a useful program developed to help high school students ~suffering through~ having fun in organic chemistry. It makes organic chemistry so easy, you could do it in your sleep! The program generates structural line diagrams from the names of organic compounds, taken from user input or selected from a menu of example compounds. The program is also able to capture the window containing a line diagram and save it as an image file for the user to easily use in a document or share with others.
@@ -38,3 +48,5 @@ To clear the screen and return to the welcome page, press the red button.
   - Aldehyde
   - Ketone
   - Carboxylic acid
+
+<img alt="Examples Menu" src="https://github.com/ethguo/Snoreganic_Chemistry/blob/master/doc/img/examples.png">
